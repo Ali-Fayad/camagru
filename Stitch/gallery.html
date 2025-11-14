@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Camagru - Gallery</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "cam-cream": "#FAF9EE",
+              "cam-olive": "#A2AF9B",
+              "cam-tan": "#DCCFC0",
+              "cam-gray": "#EEEEEE",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+              brand: ["Pacifico", "cursive"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem", // 12px
+              lg: "1rem", // 16px
+              xl: "1.5rem", // 24px
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+  <body class="font-display bg-cam-cream text-gray-800">
+    <div class="relative flex min-h-screen w-full flex-col">
+      <header class="absolute top-0 left-0 right-0 z-10 py-6">
+        <div class="container mx-auto px-4">
+          <div class="flex items-center justify-center gap-3 text-cam-olive">
+            <svg
+              class="h-10 w-10"
+              fill="currentColor"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+              ></path>
+            </svg>
+            <h1 class="font-brand text-5xl">Camagru</h1>
+          </div>
+        </div>
+      </header>
+      <aside class="fixed top-0 right-0 z-20 flex h-full items-center pr-6">
+        <nav
+          class="flex flex-col gap-3 rounded-full border border-cam-gray bg-cam-cream/80 p-3 backdrop-blur-sm shadow-sm"
+        >
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Home"
+          >
+            <span class="material-symbols-outlined text-2xl">home</span>
+          </a>
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Profile"
+          >
+            <span class="material-symbols-outlined text-2xl">person</span>
+          </a>
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Post"
+          >
+            <span class="material-symbols-outlined text-2xl">add_circle</span>
+          </a>
+        </nav>
+      </aside>
+      <main class="flex-1 px-4 pt-32 pb-16">
+        <div class="container mx-auto">
+          <div class="flex flex-col gap-8">
+            <div class="flex items-center justify-between">
+              <h2
+                class="text-3xl font-black leading-tight tracking-[-0.033em] text-gray-900"
+              >
+                Gallery
+              </h2>
+              <div>
+                <button
+                  class="inline-flex items-center rounded-lg bg-cam-olive px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-opacity-90 focus:outline-none focus:ring-4 focus:ring-cam-olive/50"
+                  data-dropdown-toggle="dropdown"
+                  id="dropdownDefaultButton"
+                  type="button"
+                >
+                  Sort by Date
+                  <svg
+                    aria-hidden="true"
+                    class="ml-2.5 h-2.5 w-2.5"
+                    fill="none"
+                    viewBox="0 0 10 6"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="m1 1 4 4 4-4"
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                    ></path>
+                  </svg>
+                </button>
+                <div
+                  class="z-10 hidden w-44 divide-y divide-cam-gray rounded-lg bg-white shadow-lg"
+                  id="dropdown"
+                >
+                  <ul
+                    aria-labelledby="dropdownDefaultButton"
+                    class="py-2 text-sm text-gray-700"
+                  >
+                    <li>
+                      <a class="block px-4 py-2 hover:bg-cam-gray" href="#"
+                        >Newest First</a
+                      >
+                    </li>
+                    <li>
+                      <a class="block px-4 py-2 hover:bg-cam-gray" href="#"
+                        >Oldest First</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div
+              class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+            >
+              <div
+                class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-shadow duration-300 hover:shadow-xl hover:shadow-cam-tan/40"
+              >
+                <a href="#">
+                  <img
+                    alt="User post image"
+                    class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCC0XsaFNWQx9nMxtRYJBdPjvMlKy_mwS2DSntd3BwTKyMM-5BtsKMhTI0qaAoBrtcPJeLngupr9Sw6xfWl85sata36GihEoIgTVzg--ATQggt9TOhmqCzVpb-OYXkdsQAKArM77cSK7MlP5j3CJArxj3SDffEyUVPPLWZMp9zJOfry4wR8fdxJSYrmyIquTEcvU65CmNc8UJSLhQscu_2c7BTCTZasjmXyMu-l9kI0NHqt65dIgIedUcs9yOqQVZRY3AcNa-RzYsw"
+                  />
+                </a>
+                <div class="p-4">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>By @username</span>
+                    <span>2 hours ago</span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >favorite</span
+                      >
+                      <span>12</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >chat_bubble</span
+                      >
+                      <span>5</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-shadow duration-300 hover:shadow-xl hover:shadow-cam-tan/40"
+              >
+                <a href="#">
+                  <img
+                    alt="User post image"
+                    class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjgGhgM8jgIlnibAPt3Oeuy4c5C4IJDiQqdEuPjXin7H0XO1JCVOicAEiNupGXPHrMCnjz5MvHnWWmKuuMIUIin3vPDeV43fCue_wfKu3u4hnkMsihfLqKbP0a1r0-1JzjfsKs9MIrCMli1etEoclrvQUTlT14gp3Bk4SSrCqw4PyT5w6dYtvHQGAWGMtlBeG5QrJ66Uxs7lg9_tnKS1drkTajM5nK2dCYx8EAmffj62oaOjTxPX3JUvQLrOKTgwh8IErz_OSM7GE"
+                  />
+                </a>
+                <div class="p-4">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>By @anotheruser</span>
+                    <span>1 day ago</span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >favorite</span
+                      >
+                      <span>45</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >chat_bubble</span
+                      >
+                      <span>10</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-shadow duration-300 hover:shadow-xl hover:shadow-cam-tan/40"
+              >
+                <a href="#">
+                  <img
+                    alt="User post image"
+                    class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYj1KTMVXaSv-dqVjTHgsGAYXLkUNuC6Oa8STveb5CfjezRt2XNbrRJXiZAMiqW3HxoNWdNwW7ewA9VAH5_G2yvRw-7f2ayGHvCzSq1ZnYi9p1GxvbQUgAU9yGWdsUH1sfF84MsCM5Z_qZLQn0VZ9d3MBFZ6WDQwZhT3kACo4DLJooXplzUtckPOX39vSa-onATfy5ADjBMKXa7APvKYiIR0ntCaxb_Ka2dOttoOIjFyKLZWZpf998pd36Ke8xLxlDSW5EuVjjcFM"
+                  />
+                </a>
+                <div class="p-4">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>By @userthree</span>
+                    <span>3 days ago</span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-1.5 text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >favorite</span
+                      >
+                      <span>102</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >chat_bubble</span
+                      >
+                      <span>23</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-shadow duration-300 hover:shadow-xl hover:shadow-cam-tan/40"
+              >
+                <a href="#">
+                  <img
+                    alt="User post image"
+                    class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDM4QvNmgfTWjdAcpH9DJWcZLznJVT6ZvK-Z4UxGuUp2cohZ0XAh0H100B3IBL0gTmVzOCOf6m1UHFENPfanHyXJAe5XmFankdUIJKFdmvMtSMNEhl27jwcXsuy2aUqRE7t7Vj8Y6r5Xi2mlyOUNftmpTBGZnfc_nDpVJ8r4mrMWcBt2WGCiz9SMYmC6uDIx7d_ZO5NN6m0MgQ-k3E3RVR4gOmVhXE8H4H5yY1zpj7klMAcP68-Z_NNtqnrfNO5tQTUwXxumIvo8Qo"
+                  />
+                </a>
+                <div class="p-4">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>By @testuser</span>
+                    <span>5 days ago</span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >favorite</span
+                      >
+                      <span>8</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >chat_bubble</span
+                      >
+                      <span>1</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-shadow duration-300 hover:shadow-xl hover:shadow-cam-tan/40"
+              >
+                <a href="#">
+                  <img
+                    alt="User post image"
+                    class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSp_h8aEnHHE1AmhmfNwaeuLj10rKw_8-mtn5Wbysgpc_GQlw5IaPrzCvoshP-zXDUD_aeqJVx18mKV_KlrKEmKftwvGtuo_RI0w0nwAEPcKx1j3WvW7JTaoG-aW6HIx3uK5ilH8O-pbnij5L4oRB4MAxMWWiSBYr3F7tlRGrSKYVowBscsXkdG9H34OTfhDQ_ZIhgAq-p3gWa8h6PSyTAtqxpJb_-b7Mz-hAnsQj6_EtVFE14WST2crLnrB69GJMus3Jq0gPxJ3g"
+                  />
+                </a>
+                <div class="p-4">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>By @username</span>
+                    <span>1 week ago</span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >favorite</span
+                      >
+                      <span>33</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >chat_bubble</span
+                      >
+                      <span>9</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-shadow duration-300 hover:shadow-xl hover:shadow-cam-tan/40"
+              >
+                <a href="#">
+                  <img
+                    alt="User post image"
+                    class="h-64 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0FmQ7FnohzBXunuVFcgdp4TulsgezdwSw3lR0DSqF7l1BJQvBlT5DevYlXSo5gE_ZYQFE0sGAy-lmPbyvDEn411OcO8gzi60q0w0qmBT7Hft7RQERQ-iJ__QX3yeoej8WSGY1ZWGTObvj7EOn2PJRnNHvOkY1x9xjSaiS6khNP667t1I4eiMhXOjszC7tvBY3elHGBRPXqk2BtVXv2jvO6Tf4pSotVIHStASWmba2ADhjnLJKnrosk1N_CUJGuYVxUgSc3Y022GA"
+                  />
+                </a>
+                <div class="p-4">
+                  <div
+                    class="flex items-center justify-between text-sm text-gray-500"
+                  >
+                    <span>By @anotheruser</span>
+                    <span>2 weeks ago</span>
+                  </div>
+                  <div class="mt-3 flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-1.5 text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >favorite</span
+                      >
+                      <span>256</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-xl"
+                        >chat_bubble</span
+                      >
+                      <span>88</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>

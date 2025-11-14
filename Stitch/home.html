@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Camagru - Home</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "cam-cream": "#FAF9EE",
+              "cam-olive": "#A2AF9B",
+              "cam-tan": "#DCCFC0",
+              "cam-gray": "#EEEEEE",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+              brand: ["Pacifico", "cursive"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem", // 12px
+              lg: "1rem", // 16px
+              xl: "1.5rem", // 24px
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+  <body class="font-display bg-cam-cream text-gray-800">
+    <div class="relative flex min-h-screen w-full flex-col">
+      <header
+        class="sticky top-0 left-0 right-0 z-30 py-6 bg-cam-cream/80 backdrop-blur-sm border-b border-cam-gray"
+      >
+        <div class="container mx-auto px-4">
+          <div class="flex items-center justify-center gap-3 text-cam-olive">
+            <svg
+              class="h-10 w-10"
+              fill="currentColor"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+              ></path>
+            </svg>
+            <h1 class="font-brand text-5xl">Camagru</h1>
+          </div>
+        </div>
+      </header>
+      <aside class="fixed top-0 right-0 z-20 flex h-full items-center pr-6">
+        <nav
+          class="flex flex-col gap-3 rounded-full border border-cam-gray bg-cam-cream/80 p-3 backdrop-blur-sm shadow-sm"
+        >
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Home"
+          >
+            <span class="material-symbols-outlined text-2xl">home</span>
+          </a>
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Profile"
+          >
+            <span class="material-symbols-outlined text-2xl">person</span>
+          </a>
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Post"
+          >
+            <span class="material-symbols-outlined text-2xl">add_circle</span>
+          </a>
+        </nav>
+      </aside>
+      <main class="flex flex-1 items-start justify-center px-4 py-8">
+        <div class="w-full max-w-lg mx-auto">
+          <div class="flex flex-col gap-8">
+            <div
+              class="w-full rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 overflow-hidden"
+            >
+              <div
+                class="p-5 flex justify-between items-center border-b border-cam-gray"
+              >
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="user photo"
+                    class="w-10 h-10 rounded-full"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzr8l-d6rvpnzA1B-J9Cig0doR5cP1kGLmlDT64WRBU2R9QLLdZjFRyg9pOQ6zq3nmgGqpYsWSE3264MYnlQYvqa9SEl3hWpOKgkFOBpSfpppqWgxjzQw7Tj5oyztf18tl4V5dK5hiRcmGfRiLOngQJsZlBKnv3gumm_QmUHzSzZDBVjtB225rD33wifkQ8iV1FyhPu4J2X9Npl-ywQn6tMicfLtWOth_cTjnNDx0qCbXNMDlXa65u55qYtzc8lknzlZJec4rlcyI"
+                  />
+                  <span class="text-sm font-semibold text-gray-900"
+                    >alex_doe</span
+                  >
+                </div>
+                <button class="text-gray-500 hover:text-gray-900">
+                  <span class="material-symbols-outlined">more_horiz</span>
+                </button>
+              </div>
+              <div>
+                <img
+                  alt="image post"
+                  class="w-full h-auto"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeLO9FUG1-f2JRPH2R6oLMeaHNZQZ5pDdUjTMlWP37dm0Dpo2WKFLBLVB-H5h7n8KoqusDqoB6CjiMZxAOF5whndoQlc_73IqYHY40qxN4F_kLnWuY_dUn68WgSwp4VyJTGCudHBMTZM9rErT27jLznT4Eu4d8zMz94FgeSvibBa2KrTxW_boaNb0AVD4dyi-eVcHgrZ9k0pAAoYXgH0Omp6A_8b5LwOw5hvgHP17QiCiOvxfdmtCss19pYHHtWdZ_YHWX4p7w3X4"
+                />
+              </div>
+              <div class="p-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-2 text-gray-700 hover:text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined">favorite</span>
+                      <span class="text-sm font-medium">1.2k</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-2 text-gray-700 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined">chat_bubble</span>
+                      <span class="text-sm font-medium">89</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-2 text-gray-700 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined">send</span>
+                    </button>
+                  </div>
+                  <button
+                    class="text-gray-700 hover:text-cam-olive transition-colors"
+                  >
+                    <span class="material-symbols-outlined">bookmark</span>
+                  </button>
+                </div>
+                <div class="text-sm">
+                  <p class="text-gray-900">
+                    <a class="font-semibold hover:underline" href="#"
+                      >alex_doe</a
+                    >
+                    <span class="text-gray-700">
+                      Golden hour at the lake. Nature is the best artist.
+                      🌅</span
+                    >
+                  </p>
+                </div>
+                <a
+                  class="text-sm font-medium text-gray-500 hover:text-cam-olive"
+                  href="#"
+                  >View all 89 comments</a
+                >
+                <p class="text-xs text-gray-400">1 DAY AGO</p>
+              </div>
+            </div>
+            <div
+              class="w-full rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 overflow-hidden"
+            >
+              <div
+                class="p-5 flex justify-between items-center border-b border-cam-gray"
+              >
+                <div class="flex items-center gap-3">
+                  <img
+                    alt="user photo"
+                    class="w-10 h-10 rounded-full"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCmLz7leu5OL1axP3sxvwUu4ZVk2yEwr-zG4qNOxSnmSjg8tcoAvCI8p9kzknbsAzH9EJnvmJ33O4esIg2ZOWG5MdRBSvskrEuJIs65OcYAGn91o0Fm9pjD175Z7AnElYgQpx_IAUYYQeIoBh4e53JruDEI2uBJyK_vvtVg2zrpXi4I5mSGgG4wJ4zqDUZpvtoMSXi4zX2h3SfVsGjoKf2CYJ8PTc-FvCDyYUXx5APFzk9MSFar1rxJNnrVHYxEJ2Dm1P63JOiHI9E"
+                  />
+                  <span class="text-sm font-semibold text-gray-900"
+                    >sara_smith</span
+                  >
+                </div>
+                <button class="text-gray-500 hover:text-gray-900">
+                  <span class="material-symbols-outlined">more_horiz</span>
+                </button>
+              </div>
+              <div>
+                <img
+                  alt="image post"
+                  class="w-full h-auto"
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfyzMFFsqQKHp-IDDoA-TuzwRaIt317frMeo9_T5meOFdZhUSzHGI45XsEoQsnGy5ceDw_3xjR1I-JLcTb6VddzmAAovU9jMj8BqPuGuP3eNMjbsIv0sDIltbSE0yGTBvsVVa_7OgvEOo5ZQaLwLD4xv41zEx8p725aDoYrkSvLzAvqTx1pJrJeF5KX2bWfQE1dpPnfNqQi1mnoWh-1-pYtWR5nsHc7iQNnpvj1vUxpo5WBYlWfUPLnoJm0QM3C2loZIbuqtRLZNo"
+                />
+              </div>
+              <div class="p-5 flex flex-col gap-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center gap-4">
+                    <button
+                      class="flex items-center gap-2 text-gray-700 hover:text-red-500 transition-colors"
+                    >
+                      <span class="material-symbols-outlined">favorite</span>
+                      <span class="text-sm font-medium">543</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-2 text-gray-700 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined">chat_bubble</span>
+                      <span class="text-sm font-medium">32</span>
+                    </button>
+                    <button
+                      class="flex items-center gap-2 text-gray-700 hover:text-cam-olive transition-colors"
+                    >
+                      <span class="material-symbols-outlined">send</span>
+                    </button>
+                  </div>
+                  <button
+                    class="text-gray-700 hover:text-cam-olive transition-colors"
+                  >
+                    <span class="material-symbols-outlined">bookmark</span>
+                  </button>
+                </div>
+                <div class="text-sm">
+                  <p class="text-gray-900">
+                    <a class="font-semibold hover:underline" href="#"
+                      >sara_smith</a
+                    >
+                    <span class="text-gray-700"> New kicks! 🔥</span>
+                  </p>
+                </div>
+                <a
+                  class="text-sm font-medium text-gray-500 hover:text-cam-olive"
+                  href="#"
+                  >View all 32 comments</a
+                >
+                <p class="text-xs text-gray-400">2 DAYS AGO</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>

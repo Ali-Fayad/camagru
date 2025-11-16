@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Camagru</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        "cam-cream": "#FAF9EE",
+                        "cam-olive": "#A2AF9B",
+                        "cam-tan": "#DCCFC0",
+                        "cam-gray": "#EEEEEE"
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans", "sans-serif"],
+                        brand: ["Pacifico", "cursive"]
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.75rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body class="font-display bg-cam-cream text-gray-800">
+    <div class="relative flex min-h-screen w-full flex-col">
+        <header class="sticky top-0 left-0 right-0 z-30 py-6 bg-cam-cream/80 backdrop-blur-sm border-b border-cam-gray">
+            <div class="container mx-auto px-4 flex items-center justify-between gap-4">
+                <div class="flex items-center justify-center gap-3 text-cam-olive">
+                    <svg class="h-10 w-10" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"></path>
+                    </svg>
+                    <h1 class="font-brand text-4xl">Camagru</h1>
+                </div>
+                <div class="flex items-center gap-3 text-sm font-medium">
+                    <button id="login-btn" data-route="login" class="text-cam-olive hover:text-gray-900">Log in</button>
+                    <button id="logout-btn" class="hidden text-gray-500 hover:text-gray-900">Log out</button>
+                </div>
+            </div>
+        </header>
+
+        <aside class="fixed top-0 right-0 z-20 flex h-full items-center pr-6">
+            <nav class="flex flex-col gap-3 rounded-full border border-cam-gray bg-cam-cream/80 p-3 backdrop-blur-sm shadow-sm">
+                <button type="button" data-route="home" class="route-pill group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200" title="Home">
+                    <span class="material-symbols-outlined text-2xl">home</span>
+                    <span class="sr-only">Home</span>
+                </button>
+                <button type="button" data-route="gallery" class="route-pill flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200" title="Gallery">
+                    <span class="material-symbols-outlined text-2xl">collections</span>
+                    <span class="sr-only">Gallery</span>
+                </button>
+                <button type="button" data-route="post" class="route-pill flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200" title="Post">
+                    <span class="material-symbols-outlined text-2xl">add_circle</span>
+                    <span class="sr-only">New post</span>
+                </button>
+                <button type="button" data-route="settings" class="route-pill flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200" title="Settings">
+                    <span class="material-symbols-outlined text-2xl">settings</span>
+                    <span class="sr-only">Settings</span>
+                </button>
+            </nav>
+        </aside>
+
+        <main class="flex-1 px-4 pt-32 pb-16">
+            <div class="container mx-auto" id="app-root">
+                <div class="w-full max-w-md mx-auto rounded-xl border border-cam-gray bg-white p-8 shadow-lg shadow-cam-tan/20">
+                    <div class="flex flex-col items-center gap-4 text-center text-cam-olive">
+                        <p class="text-sm uppercase tracking-[0.3em]">Loading</p>
+                        <div class="w-12 h-12 border-4 border-cam-gray border-t-cam-olive rounded-full animate-spin"></div>
+                        <p class="text-sm text-gray-500">Fetching Camagru experience…</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="toast-root" class="fixed bottom-4 right-4 space-y-3"></div>
+
+    <script type="module" src="./js/app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+</body>
+</html>

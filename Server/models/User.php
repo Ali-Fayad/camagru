@@ -16,7 +16,7 @@ class User
     public function create($email, $username, $password)
     {
         $username = strtolower($username);
-        
+
         // Validate username (letters and digits only)
         if (!preg_match('/^[a-z0-9]+$/', $username)) {
             return ["status" => "error", "message" => "Username must contain only letters and digits"];
@@ -38,18 +38,27 @@ class User
 
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $query = "INSERT INTO " . $this->table . " 
-                  (email, username, password, enableNotification, isVerified) 
-                  VALUES (?, ?, ?, 1, 0)";
+        // Generate a verification code and store it in the database
+        try {
+            $verificationCode = bin2hex(random_bytes(10));
+        } catch (Exception $e) {
+            // fallback if random_bytes fails
+            $verificationCode = substr(md5(uniqid((string)mt_rand(), true)), 0, 20);
+        }
+
+        $query = "INSERT INTO " . $this->table . "
+                  (email, username, password, enableNotification, isVerified, verification_code)
+                  VALUES (?, ?, ?, 1, 0, ?)";
 
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("sss", $email, $username, $hashedPassword);
+        $stmt->bind_param("ssss", $email, $username, $hashedPassword, $verificationCode);
 
         if ($stmt->execute()) {
             return [
                 "status" => "success",
                 "message" => "User created successfully",
-                "userId" => $this->conn->insert_id
+                "userId" => $this->conn->insert_id,
+                "verificationCode" => $verificationCode
             ];
         }
 
@@ -183,7 +192,7 @@ class User
     public function getVerificationStatus($email)
     {
         $user = $this->findByEmail($email);
-        
+
         if (!$user) {
             return ["status" => "error", "message" => "User not found"];
         }

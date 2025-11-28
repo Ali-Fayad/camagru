@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . "/../models/User.php";
+// Ensure MailerController is available when sending verification emails
+require_once __DIR__ . "/../Controller/MailerController.php";
 
 class UserController
 {
@@ -13,14 +15,25 @@ class UserController
         $user = new User();
         $result = $user->create($data['email'], $data['username'], $data['password']);
 
-        if ($result['status'] === 'success') {
-            // Send verification email
-            $mailerResult = MailerController::sendVerificationCode($data['email'], $result['verificationCode']);
-            
+        if (isset($result['status']) && $result['status'] === 'success') {
+            // Try to obtain a verification code safely (avoid undefined index warnings)
+            $verificationCode = $result['verificationCode'] ?? $result['verification_code'] ?? null;
+
+            // If not returned by create(), try to read it from the DB using the returned userId
+            if (empty($verificationCode) && isset($result['userId'])) {
+                $dbUser = $user->findById($result['userId']);
+                $verificationCode = $dbUser['verification_code'] ?? null;
+            }
+
+            if (!empty($verificationCode)) {
+                // Send verification email (MailerController::sendVerificationCode logs the code when mail not configured)
+                MailerController::sendVerificationCode($data['email'], $verificationCode);
+            }
+
             return [
                 "status" => "success",
                 "message" => "User created successfully. Please verify your email.",
-                "userId" => $result['userId']
+                "userId" => $result['userId'] ?? null
             ];
         }
 
@@ -44,9 +57,8 @@ class UserController
             return ["status" => "error", "message" => "Invalid credentials"];
         }
 
-        if (!$userData['isVerified']) {
-            return ["status" => "error", "message" => "Please verify your email before logging in"];
-        }
+        // NOTE: allow login even if the user hasn't verified their email yet.
+        // Previously: if (!$userData['isVerified']) { return ["status"=>"error","message"=>"Please verify your email before logging in"]; }
 
         // Remove sensitive data
         unset($userData['password']);

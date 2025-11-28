@@ -25,15 +25,15 @@ RUN set -e; \
 
         <IfModule mod_rewrite.c>
             RewriteEngine On
-            
+
             # Serve static files directly
             RewriteCond %{REQUEST_FILENAME} -f
             RewriteRule ^ - [L]
-            
+
             # Route API requests to index.php
             RewriteCond %{REQUEST_URI} ^/api/
             RewriteRule ^ index.php [L]
-            
+
             # Everything else serves index.html (SPA)
             RewriteRule ^ index.html [L]
         </IfModule>

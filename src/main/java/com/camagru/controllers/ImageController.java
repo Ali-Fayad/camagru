@@ -1,0 +1,167 @@
+package com.camagru.controllers;
+
+import com.camagru.dtos.responses.ApiResponse;
+import com.camagru.models.Image;
+import com.camagru.services.ImageService;
+import com.camagru.services.SessionService;
+import com.camagru.utils.JsonUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ * Image controller (REST JSON API).
+ * Handles: upload image, delete image, get image details.
+ */
+@WebServlet(urlPatterns = {
+    "/api/images/upload",
+    "/api/images/*"
+})
+public class ImageController extends HttpServlet {
+    
+    private final ImageService imageService = new ImageService();
+    private final SessionService sessionService = new SessionService();
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        
+        if ("/api/images/upload".equals(req.getServletPath())) {
+            handleUpload(req, resp);
+        } else {
+            sendJsonResponse(resp, 404, ApiResponse.error("Not found", "NOT_FOUND"));
+        }
+    }
+    
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        
+        handleGetImage(req, resp);
+    }
+    
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) 
+            throws ServletException, IOException {
+        
+        handleDeleteImage(req, resp);
+    }
+    
+    private void handleUpload(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Integer userId = getCurrentUserId(req);
+            if (userId == null) {
+                sendJsonResponse(resp, 401, ApiResponse.error("Unauthorized", "AUTH_REQUIRED"));
+                return;
+            }
+            
+            Map<String, Object> body = JsonUtil.parseRequest(req);
+            
+            String imageData = (String) body.get("imageData");
+            Object stickerIndexObj = body.get("stickerIndex");
+            Boolean useWebcam = (Boolean) body.get("useWebcam");
+            
+            if (imageData == null || stickerIndexObj == null) {
+                sendJsonResponse(resp, 400, ApiResponse.error("imageData and stickerIndex are required", "VALIDATION_ERROR"));
+                return;
+            }
+            
+            Integer stickerIndex = stickerIndexObj instanceof Integer ? 
+                (Integer) stickerIndexObj : Integer.parseInt(stickerIndexObj.toString());
+            
+            Image image = imageService.uploadImage(userId, imageData, stickerIndex, useWebcam != null && useWebcam);
+            
+            sendJsonResponse(resp, 200, ApiResponse.success("Image uploaded successfully", 
+                Map.of("imageId", image.getId())));
+                
+        } catch (Exception e) {
+            sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "IMAGE_PROCESSING_ERROR"));
+        }
+    }
+    
+    private void handleGetImage(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            String pathInfo = req.getPathInfo();
+            if (pathInfo == null || pathInfo.length() <= 1) {
+                sendJsonResponse(resp, 400, ApiResponse.error("Image ID required", "VALIDATION_ERROR"));
+                return;
+            }
+            
+            Integer imageId = Integer.parseInt(pathInfo.substring(1));
+            Image image = imageService.getImageById(imageId);
+            
+            if (image == null) {
+                sendJsonResponse(resp, 404, ApiResponse.error("Image not found", "NOT_FOUND"));
+                return;
+            }
+            
+            sendJsonResponse(resp, 200, ApiResponse.success("Image found", image));
+            
+        } catch (Exception e) {
+            sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "SERVER_ERROR"));
+        }
+    }
+    
+    private void handleDeleteImage(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            Integer userId = getCurrentUserId(req);
+            if (userId == null) {
+                sendJsonResponse(resp, 401, ApiResponse.error("Unauthorized", "AUTH_REQUIRED"));
+                return;
+            }
+            
+            String pathInfo = req.getPathInfo();
+            if (pathInfo == null || pathInfo.length() <= 1) {
+                sendJsonResponse(resp, 400, ApiResponse.error("Image ID required", "VALIDATION_ERROR"));
+                return;
+            }
+            
+            Integer imageId = Integer.parseInt(pathInfo.substring(1));
+            boolean deleted = imageService.deleteImage(imageId, userId);
+            
+            if (deleted) {
+                sendJsonResponse(resp, 200, ApiResponse.success("Image deleted successfully"));
+            } else {
+                sendJsonResponse(resp, 404, ApiResponse.error("Image not found", "NOT_FOUND"));
+            }
+            
+        } catch (IllegalArgumentException e) {
+            sendJsonResponse(resp, 403, ApiResponse.error(e.getMessage(), "FORBIDDEN"));
+        } catch (Exception e) {
+            sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "SERVER_ERROR"));
+        }
+    }
+    
+    private Integer getCurrentUserId(HttpServletRequest req) throws Exception {
+        String sessionId = getSessionIdFromRequest(req);
+        if (sessionId == null) {
+            return null;
+        }
+        return sessionService.getUserIdFromSession(sessionId);
+    }
+    
+    private String getSessionIdFromRequest(HttpServletRequest req) {
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("CAMAGRU_SESSION".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+    
+    private void sendJsonResponse(HttpServletResponse resp, int status, ApiResponse response) throws IOException {
+        resp.setStatus(status);
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        resp.getWriter().write(JsonUtil.toJson(response));
+    }
+}

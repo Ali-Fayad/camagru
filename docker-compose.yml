@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database
+  db:
+    image: postgres:13-alpine
+    container_name: camagru-db
+    environment:
+      POSTGRES_DB: camagru
+      POSTGRES_USER: camagru
+      POSTGRES_PASSWORD: camagrupwd
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - camagru-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U camagru"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Camagru web application
+  app:
+    build: .
+    container_name: camagru-app
+    ports:
+      - "8080:8080"
+    environment:
+      # Database
+      DB_URL: jdbc:postgresql://db:5432/camagru
+      DB_USER: camagru
+      DB_PASSWORD: camagrupwd
+      
+      # SMTP (Gmail example - use App Password)
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: your-email@gmail.com
+      SMTP_PASSWORD: your-app-password
+      SMTP_FROM: noreply@camagru.com
+      
+      # Application
+      APP_URL: http://localhost:8080
+      UPLOAD_DIR: /uploads
+      STICKER_DIR: /stickers
+      MAX_UPLOAD_SIZE: 5242880
+      SESSION_TIMEOUT: 1800
+      
+      # Verification
+      VERIFICATION_CODE_LENGTH: 6
+      VERIFICATION_EXPIRY_HOURS: 24
+      RESET_TOKEN_EXPIRY_HOURS: 1
+    volumes:
+      - uploads_data:/usr/local/tomcat/webapps/ROOT/uploads
+      - stickers_data:/usr/local/tomcat/webapps/ROOT/stickers
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - camagru-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
+  stickers_data:
+    driver: local
+
+networks:
+  camagru-network:
+    driver: bridge

@@ -34,6 +34,7 @@ CREATE TABLE images (
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     original_filename VARCHAR(255),
     stored_filename VARCHAR(255) UNIQUE NOT NULL,  -- Hashed filename on disk
+    caption TEXT,
     sticker_index INTEGER NOT NULL,                -- Which sticker was used (0-based)
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

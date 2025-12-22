@@ -66,6 +66,7 @@ public class ImageController extends HttpServlet {
             String imageData = (String) body.get("imageData");
             Object stickerIndexObj = body.get("stickerIndex");
             Boolean useWebcam = (Boolean) body.get("useWebcam");
+            String caption = body.get("caption") != null ? body.get("caption").toString() : null;
             
             if (imageData == null || stickerIndexObj == null) {
                 sendJsonResponse(resp, 400, ApiResponse.error("imageData and stickerIndex are required", "VALIDATION_ERROR"));
@@ -75,7 +76,7 @@ public class ImageController extends HttpServlet {
             Integer stickerIndex = stickerIndexObj instanceof Integer ? 
                 (Integer) stickerIndexObj : Integer.parseInt(stickerIndexObj.toString());
             
-            Image image = imageService.uploadImage(userId, imageData, stickerIndex, useWebcam != null && useWebcam);
+            Image image = imageService.uploadImage(userId, imageData, stickerIndex, useWebcam != null && useWebcam, caption);
             
             sendJsonResponse(resp, 200, ApiResponse.success("Image uploaded successfully", 
                 Map.of("imageId", image.getId())));

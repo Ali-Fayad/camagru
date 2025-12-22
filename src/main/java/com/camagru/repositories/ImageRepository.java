@@ -16,9 +16,9 @@ public class ImageRepository {
     /**
      * Create new image record.
      */
-    public Image create(Integer userId, String originalFilename, String storedFilename, Integer stickerIndex) throws SQLException {
-        String sql = "INSERT INTO images (user_id, original_filename, stored_filename, sticker_index) " +
-                     "VALUES (?, ?, ?, ?) RETURNING id, created_at";
+    public Image create(Integer userId, String originalFilename, String storedFilename, String caption, Integer stickerIndex) throws SQLException {
+        String sql = "INSERT INTO images (user_id, original_filename, stored_filename, caption, sticker_index) " +
+                     "VALUES (?, ?, ?, ?, ?) RETURNING id, created_at";
         
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -26,7 +26,8 @@ public class ImageRepository {
             stmt.setInt(1, userId);
             stmt.setString(2, originalFilename);
             stmt.setString(3, storedFilename);
-            stmt.setInt(4, stickerIndex);
+            stmt.setString(4, caption);
+            stmt.setInt(5, stickerIndex);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -35,6 +36,7 @@ public class ImageRepository {
                     image.setUserId(userId);
                     image.setOriginalFilename(originalFilename);
                     image.setStoredFilename(storedFilename);
+                    image.setCaption(caption);
                     image.setStickerIndex(stickerIndex);
                     image.setCreatedAt(rs.getTimestamp("created_at"));
                     return image;
@@ -170,6 +172,7 @@ public class ImageRepository {
         image.setUserId(rs.getInt("user_id"));
         image.setOriginalFilename(rs.getString("original_filename"));
         image.setStoredFilename(rs.getString("stored_filename"));
+        image.setCaption(rs.getString("caption"));
         image.setStickerIndex(rs.getInt("sticker_index"));
         image.setCreatedAt(rs.getTimestamp("created_at"));
         return image;

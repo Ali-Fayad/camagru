@@ -7,6 +7,7 @@ public class ImageUploadRequest {
     private String imageData;      // base64 encoded
     private Integer stickerIndex;
     private Boolean useWebcam;
+    private String caption;
 
     public ImageUploadRequest() {}
 
@@ -32,5 +33,13 @@ public class ImageUploadRequest {
 
     public void setUseWebcam(Boolean useWebcam) {
         this.useWebcam = useWebcam;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 }

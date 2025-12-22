@@ -30,7 +30,7 @@ public class ImageService {
      * @param useWebcam Whether image is from webcam
      * @return Created image record
      */
-    public Image uploadImage(Integer userId, String base64Image, Integer stickerIndex, boolean useWebcam) 
+        public Image uploadImage(Integer userId, String base64Image, Integer stickerIndex, boolean useWebcam, String caption) 
             throws SQLException, IOException {
         
         // Validate sticker index against available stickers
@@ -65,6 +65,15 @@ public class ImageService {
         // Merge image with sticker
         byte[] mergedImageBytes = ImageUtil.mergeImages(imageBytes, stickerPath);
         
+        // Sanitize caption
+        String safeCaption = null;
+        if (caption != null) {
+            safeCaption = ValidationUtil.escapeHtml(caption).trim();
+            if (safeCaption.length() > 500) {
+                throw new IllegalArgumentException("Caption too long (max 500 chars)");
+            }
+        }
+
         // Save merged image to filesystem
         String uploadDir = getUploadDirectory();
         String storedFilename = FileUtil.saveBase64Image(
@@ -74,7 +83,7 @@ public class ImageService {
         
         // Save image record to database
         String originalFilename = useWebcam ? "webcam_capture.jpg" : "upload.jpg";
-        Image image = imageRepository.create(userId, originalFilename, storedFilename, stickerIndex);
+        Image image = imageRepository.create(userId, originalFilename, storedFilename, safeCaption, stickerIndex);
         
         return image;
     }

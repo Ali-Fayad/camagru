@@ -11,6 +11,7 @@ public class Image {
     private Integer userId;
     private String originalFilename;
     private String storedFilename;
+    private String caption;
     private Integer stickerIndex;
     private Timestamp createdAt;
 
@@ -21,6 +22,14 @@ public class Image {
         this.id = id;
         this.userId = userId;
         this.storedFilename = storedFilename;
+        this.stickerIndex = stickerIndex;
+    }
+
+    public Image(Integer id, Integer userId, String storedFilename, String caption, Integer stickerIndex) {
+        this.id = id;
+        this.userId = userId;
+        this.storedFilename = storedFilename;
+        this.caption = caption;
         this.stickerIndex = stickerIndex;
     }
 
@@ -63,6 +72,14 @@ public class Image {
 
     public void setStickerIndex(Integer stickerIndex) {
         this.stickerIndex = stickerIndex;
+    }
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public void setCaption(String caption) {
+        this.caption = caption;
     }
 
     public Timestamp getCreatedAt() {

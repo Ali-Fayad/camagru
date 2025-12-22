@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Camagru - Post</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "cam-cream": "#FAF9EE",
+              "cam-olive": "#A2AF9B",
+              "cam-tan": "#DCCFC0",
+              "cam-gray": "#EEEEEE",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+              brand: ["Pacifico", "cursive"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem", // 12px
+              lg: "1rem", // 16px
+              xl: "1.5rem", // 24px
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+    </style>
+  </head>
+  <body class="font-display bg-cam-cream text-gray-800">
+    <div class="relative flex min-h-screen w-full flex-col">
+      <header class="absolute top-0 left-0 right-0 z-10 py-6">
+        <div class="container mx-auto px-4">
+          <div class="flex items-center justify-center gap-3 text-cam-olive">
+            <svg
+              class="h-10 w-10"
+              fill="currentColor"
+              viewBox="0 0 48 48"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+              ></path>
+            </svg>
+            <h1 class="font-brand text-5xl">Camagru</h1>
+          </div>
+        </div>
+      </header>
+      <aside class="fixed top-0 right-0 z-20 flex h-full items-center pr-6">
+        <nav
+          class="flex flex-col gap-3 rounded-full border border-cam-gray bg-cam-cream/80 p-3 backdrop-blur-sm shadow-sm"
+        >
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Home"
+          >
+            <span class="material-symbols-outlined text-2xl">home</span>
+          </a>
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full text-cam-olive hover:bg-cam-gray transition-colors duration-200"
+            href="#"
+            title="Profile"
+          >
+            <span class="material-symbols-outlined text-2xl">person</span>
+          </a>
+          <a
+            class="group flex h-12 w-12 items-center justify-center rounded-full bg-cam-olive text-white shadow-md transition-colors duration-200"
+            href="#"
+            title="Post"
+          >
+            <span class="material-symbols-outlined text-2xl">add_circle</span>
+          </a>
+        </nav>
+      </aside>
+      <main class="flex-1 px-4 pt-32 pb-16 flex justify-center items-start">
+        <div class="container mx-auto max-w-5xl">
+          <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+            <div class="lg:col-span-2 space-y-6">
+              <div
+                class="rounded-2xl border border-cam-gray bg-white p-6 shadow-xl shadow-cam-tan/20"
+              >
+                <h2 class="mb-4 text-2xl font-bold text-gray-900">
+                  Create Post
+                </h2>
+                <div class="mb-4 border-b border-gray-200">
+                  <ul
+                    class="flex flex-wrap -mb-px text-sm font-medium text-center"
+                    data-tabs-toggle="#default-tab-content"
+                    id="default-tab"
+                    role="tablist"
+                  >
+                    <li class="me-2" role="presentation">
+                      <button
+                        aria-controls="upload"
+                        aria-selected="false"
+                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300"
+                        data-tabs-target="#upload"
+                        id="upload-tab"
+                        role="tab"
+                        type="button"
+                      >
+                        Upload Image
+                      </button>
+                    </li>
+                    <li class="me-2" role="presentation">
+                      <button
+                        aria-controls="webcam"
+                        aria-selected="true"
+                        class="inline-block p-4 border-b-2 rounded-t-lg text-cam-olive border-cam-olive"
+                        data-tabs-target="#webcam"
+                        id="webcam-tab"
+                        role="tab"
+                        type="button"
+                      >
+                        Webcam
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+                <div id="default-tab-content">
+                  <div
+                    aria-labelledby="upload-tab"
+                    class="hidden p-4 rounded-lg bg-gray-50"
+                    id="upload"
+                    role="tabpanel"
+                  >
+                    <div class="flex items-center justify-center w-full">
+                      <label
+                        class="flex flex-col items-center justify-center w-full h-64 border-2 border-cam-olive/30 border-dashed rounded-lg cursor-pointer bg-white hover:bg-gray-50 transition-colors"
+                        for="dropzone-file"
+                      >
+                        <div
+                          class="flex flex-col items-center justify-center pt-5 pb-6"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="w-8 h-8 mb-4 text-cam-olive"
+                            fill="none"
+                            viewBox="0 0 20 16"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                            ></path>
+                          </svg>
+                          <p class="mb-2 text-sm text-gray-500">
+                            <span class="font-semibold">Click to upload</span>
+                            or drag and drop
+                          </p>
+                          <p class="text-xs text-gray-500">
+                            SVG, PNG, JPG or GIF (MAX. 800x400px)
+                          </p>
+                        </div>
+                        <input class="hidden" id="dropzone-file" type="file" />
+                      </label>
+                    </div>
+                  </div>
+                  <div
+                    aria-labelledby="webcam-tab"
+                    class="p-4 rounded-lg bg-gray-50"
+                    id="webcam"
+                    role="tabpanel"
+                  >
+                    <div
+                      class="relative w-full aspect-video bg-black rounded-lg overflow-hidden flex items-center justify-center"
+                    >
+                      <span
+                        class="text-gray-400 flex flex-col items-center gap-2"
+                      >
+                        <span class="material-symbols-outlined text-4xl"
+                          >videocam_off</span
+                        >
+                        <span>Camera Preview</span>
+                      </span>
+                      <div
+                        class="absolute inset-0 pointer-events-none flex items-center justify-center"
+                      ></div>
+                    </div>
+                    <div class="mt-4 flex justify-center">
+                      <button
+                        class="group flex h-14 w-14 items-center justify-center rounded-full bg-red-500 text-white shadow-lg hover:bg-red-600 hover:shadow-red-500/30 transition-all duration-200"
+                        type="button"
+                      >
+                        <span class="material-symbols-outlined text-3xl"
+                          >camera</span
+                        >
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <label
+                    class="block mb-2 text-sm font-medium text-gray-900"
+                    for="message"
+                    >Your message</label
+                  >
+                  <textarea
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-cam-olive focus:border-cam-olive"
+                    id="message"
+                    placeholder="Write your thoughts here..."
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div class="mt-6 flex justify-end">
+                  <button
+                    class="px-6 py-2.5 bg-cam-olive text-white font-medium text-sm rounded-lg hover:bg-opacity-90 shadow-lg shadow-cam-olive/20 transition-all focus:ring-4 focus:ring-cam-olive/50"
+                    type="button"
+                  >
+                    Publish Post
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="lg:col-span-1 space-y-6">
+              <div
+                class="rounded-2xl border border-cam-gray bg-white p-6 shadow-xl shadow-cam-tan/20 sticky top-32"
+              >
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="text-lg font-bold text-gray-900">Add Stickers</h3>
+                  <span
+                    class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full"
+                    >4 available</span
+                  >
+                </div>
+                <p class="text-sm text-gray-500 mb-4">
+                  Click a sticker to add it to your photo.
+                </p>
+                <div class="grid grid-cols-2 gap-4">
+                  <button
+                    class="aspect-square rounded-xl bg-gray-50 border border-gray-200 hover:border-cam-olive hover:bg-cam-cream transition-all p-2 flex items-center justify-center group relative overflow-hidden"
+                  >
+                    <img
+                      alt="Sticker 1"
+                      class="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDivAl7-KlDazEG0oSOzi2TWUvUptRtwq1hHthS_bOhT2KRAz4X-njUwOLUxigeNrs6IIvs1Bu-jNGWMGwkvsgbYUDk85aSfByE8tNu2jyzMbAM-1fvbx5iNa2q6qKJBB15VPm5OoqTW6TBq9M3-tuEx75SnCuWb2qMywITBApIuE3qmEhX-A3GNs8-xwRKnDh7yssfxaS6QD_mSJa1_j-4O5wpSdYhtUQ9rwFv4-odznfwlD0lSqjG8tNKh98w1TvidF-_Vm1ICo"
+                    />
+                    <div
+                      class="absolute inset-0 bg-cam-olive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                    ></div>
+                  </button>
+                  <button
+                    class="aspect-square rounded-xl bg-gray-50 border border-gray-200 hover:border-cam-olive hover:bg-cam-cream transition-all p-2 flex items-center justify-center group relative overflow-hidden"
+                  >
+                    <img
+                      alt="Sticker 2"
+                      class="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiEKar4jbdBqVYXVDBrURlLHAudVkpJJLYgWvhiIm140X-_DSTndWNPMMbwKEtiWEpHyJoQq-gyZuX44o1sDSy91hJutl8toweJSMWvaGPQdZBYFnQY49WOBG0YCybzRWcu5XziET--bKI-I88D7r1GresjPnu_hNH7ib_ETDBhBQEnwnJI_XCT_lPBdZSXDUJ0Oc1YmKo-iDJ8gEtmqoV3DXdBrt3oxXHirxQL1h_jAGTvQAcoAJMeB2lYXQIItLTkFBQUSDUnts"
+                    />
+                    <div
+                      class="absolute inset-0 bg-cam-olive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                    ></div>
+                  </button>
+                  <button
+                    class="aspect-square rounded-xl bg-gray-50 border border-gray-200 hover:border-cam-olive hover:bg-cam-cream transition-all p-2 flex items-center justify-center group relative overflow-hidden"
+                  >
+                    <img
+                      alt="Sticker 3"
+                      class="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGu5XPyHnbK9LvOtfpsp7q_DSG3xYPJP4rcrlCfqoL3RhwVwsaIZQB-oGWHnI7BKtqS72Yx51eY85-5Za_r38QLbeH4AlPBcreDy458pK44uo40kL83KsETD_d-SsmeU7E0ntHslWVvAX629OjcD8bjt4CsgvZ5n_-3tTha06GVBtFdk1c3cp1xdj365lnAq4T1Jk-z3sE2mNWU2NZ0Ey8zAZuCU09acQwlIaUe3SBgzjX6dCVy_LnEoJNGeGih-K54kN_bHhk_q0"
+                    />
+                    <div
+                      class="absolute inset-0 bg-cam-olive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                    ></div>
+                  </button>
+                  <button
+                    class="aspect-square rounded-xl bg-gray-50 border border-gray-200 hover:border-cam-olive hover:bg-cam-cream transition-all p-2 flex items-center justify-center group relative overflow-hidden"
+                  >
+                    <img
+                      alt="Sticker 4"
+                      class="w-full h-full object-contain group-hover:scale-110 transition-transform"
+                      src="https://lh3.googleusercontent.com/aida-public/AB6AXuCp0hfQK77FTJikssWXZBlMExfpT23e5uMzkLN2NxPEw9TUoxbp_QhKjdxzbjaXLCkPxE2INpn6KBzMieBtPRS2HTrwtiMH4uxSkYIZcdDPn-zumLKIz9-YN8pIzNX7h5Zd_-n3alSdoau8qFOtIT0Fid5tpeX_N67fnvkruh9eBvZZSF-VUvgbGjitMhB5wiwXiChubuSNlGMiRyzco_gcbxdHqGf2gLPQs7xjVURnsG0n2aiehZdFDDu9zuYXpKT87s-0liVWCxg"
+                    />
+                    <div
+                      class="absolute inset-0 bg-cam-olive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                    ></div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+  </body>
+</html>

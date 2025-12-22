@@ -1,0 +1,1 @@
+class ImageCard { render() { return DOM.create('div', {}, ['Image Card']); } }

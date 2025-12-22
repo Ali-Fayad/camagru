@@ -1,0 +1,1 @@
+class ProfilePage { async render() { return DOM.create('div', {}, ['Profile Page']); } }

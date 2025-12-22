@@ -1,0 +1,1 @@
+class ImageService { constructor(api) { this.api = api; } }

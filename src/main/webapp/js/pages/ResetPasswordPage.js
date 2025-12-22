@@ -1,0 +1,1 @@
+class ResetPasswordPage { async render() { return DOM.create('div', {}, ['Reset Password Page']); } }

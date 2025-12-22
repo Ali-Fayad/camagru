@@ -1,0 +1,1 @@
+class RegisterPage { async render() { return DOM.create('div', {}, ['Register Page']); } }

@@ -1,0 +1,1 @@
+class CommentService { constructor(api) { this.api = api; } }

@@ -1,0 +1,1 @@
+class StickerService { constructor(api) { this.api = api; } }

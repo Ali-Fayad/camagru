@@ -1,0 +1,1 @@
+class GalleryService { constructor(api) { this.api = api; } }

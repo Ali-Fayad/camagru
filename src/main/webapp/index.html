@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camagru</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/custom.css">
+    <style>
+        /* Minimal custom styles to supplement Tailwind */
+        [x-cloak] { display: none !important; }
+        .webcam-container video, .webcam-container canvas {
+            transform: scaleX(-1); /* Mirror effect */
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    <div id="app" class="flex-grow flex flex-col md:flex-row">
+        <!-- App content will be injected here -->
+    </div>
+
+    <!-- Scripts - Loaded in dependency order -->
+    
+    <!-- Utils -->
+    <script src="js/utils/dom.js"></script>
+    <script src="js/utils/validators.js"></script>
+    <script src="js/utils/formatters.js"></script>
+    <script src="js/utils/file-utils.js"></script>
+    <script src="js/utils/error-handler.js"></script>
+
+    <!-- Core -->
+    <script src="js/Storage.js"></script>
+    
+    <!-- Services -->
+    <script src="js/services/ApiService.js"></script>
+    <script src="js/services/AuthService.js"></script>
+    <script src="js/services/UserService.js"></script>
+    <script src="js/services/ImageService.js"></script>
+    <script src="js/services/GalleryService.js"></script>
+    <script src="js/services/CommentService.js"></script>
+    <script src="js/services/StickerService.js"></script>
+    <script src="js/services/WebcamService.js"></script>
+
+    <!-- Components -->
+    <script src="js/components/LoadingSpinner.js"></script>
+    <script src="js/components/EmptyState.js"></script>
+    <script src="js/components/Navbar.js"></script>
+    <script src="js/components/Sidebar.js"></script>
+    <script src="js/components/Layout.js"></script>
+    <script src="js/components/ImageCard.js"></script>
+    <script src="js/components/CommentSection.js"></script>
+    <script src="js/components/WebcamModal.js"></script>
+    <script src="js/components/StickerPicker.js"></script>
+
+    <!-- Pages -->
+    <script src="js/pages/HomePage.js"></script>
+    <script src="js/pages/LoginPage.js"></script>
+    <script src="js/pages/RegisterPage.js"></script>
+    <script src="js/pages/VerifyPage.js"></script>
+    <script src="js/pages/ForgotPasswordPage.js"></script>
+    <script src="js/pages/ResetPasswordPage.js"></script>
+    <script src="js/pages/GalleryPage.js"></script>
+    <script src="js/pages/UploadPage.js"></script>
+    <script src="js/pages/ProfilePage.js"></script>
+    <script src="js/pages/ChangePasswordPage.js"></script>
+    <script src="js/pages/SettingsPage.js"></script>
+
+    <!-- Router & Main -->
+    <script src="js/router.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

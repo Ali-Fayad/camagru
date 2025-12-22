@@ -1,0 +1,1 @@
+class CommentSection { render() { return DOM.create('div', {}, ['Comments']); } }

@@ -1,0 +1,1 @@
+class UploadPage { async render() { return DOM.create('div', {}, ['Upload Page']); } }

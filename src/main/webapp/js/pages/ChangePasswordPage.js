@@ -1,0 +1,1 @@
+class ChangePasswordPage { async render() { return DOM.create('div', {}, ['Change Password Page']); } }

@@ -1,0 +1,1 @@
+class SettingsPage { async render() { return DOM.create('div', {}, ['Settings Page']); } }

@@ -1,0 +1,1 @@
+class GalleryPage { async render() { return DOM.create('div', {}, ['Gallery Page']); } }

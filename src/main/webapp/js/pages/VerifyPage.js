@@ -1,0 +1,1 @@
+class VerifyPage { async render() { return DOM.create('div', {}, ['Verify Page']); } }

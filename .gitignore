@@ -1,0 +1,43 @@
+# Build output
+/target/
+/target/**
+
+# Compiled class files
+*.class
+
+# Packages
+*.jar
+*.war
+*.ear
+
+# Maven / generated
+/generated-sources/
+/classes/
+
+# IDEs
+.idea/
+*.iml
+.vscode/
+.project
+.classpath
+.settings/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files (do not commit credentials)
+# .env
+# .env.*
+
+# Uploads / runtime data
+/uploads/
+/app/uploads/
+uploads_data/
+stickers_data/
+
+# JavaMail debug output (if added)
+mail.debug

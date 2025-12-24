@@ -4,46 +4,64 @@ class LoginPage {
     }
 
     async render() {
-        const container = DOM.create('div', { className: 'max-w-md mx-auto mt-10 bg-white p-8 rounded-xl shadow-sm border border-gray-100 animate-fade-in' });
+        const container = DOM.create('div', { className: 'flex min-h-[80vh] items-center justify-center animate-fade-in' });
         
         container.innerHTML = `
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">Welcome Back</h2>
-                <p class="text-gray-500 mt-2">Sign in to continue to Camagru</p>
-            </div>
-            
-            <form id="login-form" class="space-y-5">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                    <input type="email" name="email" required 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                        placeholder="you@example.com">
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                    <input type="password" name="password" required 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
-                        placeholder="••••••••">
-                </div>
-                
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+            <div class="w-full max-w-md rounded-3xl bg-white p-8 shadow-lg border border-cam-gray">
+                <div class="mb-8 text-center">
+                    <div class="mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-cam-cream text-cam-olive">
+                        <span class="material-symbols-outlined text-3xl">lock</span>
                     </div>
-                    <a href="#/forgot-password" class="text-sm font-medium text-blue-600 hover:text-blue-500">Forgot password?</a>
+                    <h2 class="text-3xl font-bold text-gray-800">Welcome Back</h2>
+                    <p class="mt-2 text-gray-600">Sign in to continue to Camagru</p>
                 </div>
                 
-                <div id="error-msg" class="p-3 bg-red-50 text-red-600 text-sm rounded-lg hidden border border-red-100"></div>
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label class="mb-2 block text-sm font-bold text-gray-700">Email Address</label>
+                        <div class="relative">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <span class="material-symbols-outlined text-gray-400">mail</span>
+                            </div>
+                            <input type="email" name="email" required 
+                                class="block w-full rounded-xl border-gray-300 pl-10 focus:border-cam-olive focus:ring-cam-olive"
+                                placeholder="you@example.com">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="mb-2 block text-sm font-bold text-gray-700">Password</label>
+                        <div class="relative">
+                            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                                <span class="material-symbols-outlined text-gray-400">key</span>
+                            </div>
+                            <input type="password" name="password" required 
+                                class="block w-full rounded-xl border-gray-300 pl-10 focus:border-cam-olive focus:ring-cam-olive"
+                                placeholder="••••••••">
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" 
+                                class="h-4 w-4 rounded border-gray-300 text-cam-olive focus:ring-cam-olive">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-600">Remember me</label>
+                        </div>
+                        <a href="#/forgot-password" class="text-sm font-bold text-cam-olive hover:text-cam-olive/80">Forgot password?</a>
+                    </div>
+                    
+                    <div id="error-msg" class="hidden rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-100"></div>
+                    
+                    <button type="submit" id="submit-btn" 
+                        class="flex w-full justify-center rounded-xl bg-cam-olive py-3 px-4 text-sm font-bold text-white shadow-sm hover:bg-cam-olive/90 focus:outline-none focus:ring-2 focus:ring-cam-olive focus:ring-offset-2 transition-transform hover:scale-[1.02]">
+                        Sign In
+                    </button>
+                </form>
                 
-                <button type="submit" id="submit-btn" class="w-full py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-colors shadow-sm flex justify-center items-center">
-                    Sign In
-                </button>
-            </form>
-            
-            <div class="mt-6 text-center text-sm text-gray-600">
-                Don't have an account? <a href="#/register" class="font-medium text-blue-600 hover:text-blue-500">Create an account</a>
+                <div class="mt-8 text-center text-sm text-gray-600">
+                    Don't have an account? 
+                    <a href="#/register" class="font-bold text-cam-olive hover:text-cam-olive/80">Create an account</a>
+                </div>
             </div>
         `;
 
@@ -65,7 +83,7 @@ class LoginPage {
             // Loading state
             const originalBtnText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>';
+            submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
             
             const formData = new FormData(form);
             const email = formData.get('email');

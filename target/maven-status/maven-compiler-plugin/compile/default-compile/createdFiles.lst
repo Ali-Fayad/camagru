@@ -35,5 +35,6 @@ com/camagru/repositories/ImageRepository.class
 com/camagru/models/Like.class
 com/camagru/models/Comment.class
 com/camagru/config/EmailConfig$1.class
+com/camagru/utils/StickerUtil.class
 com/camagru/utils/ImageUtil.class
 com/camagru/models/Image.class

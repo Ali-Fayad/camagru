@@ -4,7 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Camagru</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "cam-cream": "#FAF9EE",
+              "cam-olive": "#A2AF9B",
+              "cam-tan": "#DCCFC0",
+              "cam-gray": "#EEEEEE",
+            },
+            fontFamily: {
+              display: ["Plus Jakarta Sans", "sans-serif"],
+              brand: ["Pacifico", "cursive"],
+            },
+            borderRadius: {
+              DEFAULT: "0.75rem", // 12px
+              lg: "1rem", // 16px
+              xl: "1.5rem", // 24px
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
     <link rel="stylesheet" href="css/custom.css">
     <style>
         /* Minimal custom styles to supplement Tailwind */
@@ -12,9 +42,13 @@
         .webcam-container video, .webcam-container canvas {
             transform: scaleX(-1); /* Mirror effect */
         }
+        body {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+<body class="font-display bg-cam-cream text-gray-800 min-h-screen flex flex-col">
     <div id="app" class="flex-grow flex flex-col md:flex-row">
         <!-- App content will be injected here -->
     </div>

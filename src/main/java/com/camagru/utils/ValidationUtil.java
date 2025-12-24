@@ -23,10 +23,17 @@ public class ValidationUtil {
      * PHP equivalent: filter_var($email, FILTER_VALIDATE_EMAIL)
      */
     public static boolean isValidEmail(String email) {
-        if (email == null || email.isEmpty()) {
+        if (email == null) {
             return false;
         }
-        return EMAIL_PATTERN.matcher(email).matches();
+
+        // Trim surrounding whitespace and remove invisible/control characters
+        String normalized = email.trim().replaceAll("\\p{C}", "");
+        if (normalized.isEmpty()) {
+            return false;
+        }
+
+        return EMAIL_PATTERN.matcher(normalized).matches();
     }
     
     /**

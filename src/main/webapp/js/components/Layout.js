@@ -6,29 +6,38 @@ class Layout {
     constructor(storage) {
         this.storage = storage;
         this.sidebar = new Sidebar(storage);
-        this.navbar = new Navbar();
         this.contentContainer = null;
     }
 
     render() {
-        const container = DOM.create('div', { className: 'flex flex-col md:flex-row min-h-screen w-full' });
+        const container = DOM.create('div', { className: 'relative flex min-h-screen w-full flex-col' });
 
-        // Mobile Navbar (Top)
-        container.appendChild(this.navbar.render());
+        // Header
+        const header = DOM.create('header', {
+            className: 'sticky top-0 left-0 right-0 z-30 py-6 bg-cam-cream/80 backdrop-blur-sm border-b border-cam-gray'
+        });
+        header.innerHTML = `
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-center gap-3 text-cam-olive">
+                    <svg class="h-10 w-10" fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"></path>
+                    </svg>
+                    <h1 class="font-brand text-5xl">Camagru</h1>
+                </div>
+            </div>
+        `;
+        container.appendChild(header);
 
-        // Sidebar (Bottom mobile, Left desktop)
+        // Sidebar (Right fixed)
         const sidebarEl = this.sidebar.render();
         container.appendChild(sidebarEl);
 
         // Main Content Area
-        // pt-20 on mobile to account for fixed header (16) + spacing (4)
-        // mb-16 on mobile to account for fixed bottom nav
-        // md:pt-8 md:mb-0 on desktop
         const main = DOM.create('main', { 
-            className: 'flex-grow bg-gray-50 p-4 md:p-8 overflow-y-auto mb-16 md:mb-0 pt-20 md:pt-8' 
+            className: 'flex-grow w-full' 
         });
         
-        this.contentContainer = DOM.create('div', { className: 'max-w-7xl mx-auto' });
+        this.contentContainer = DOM.create('div', { className: 'container mx-auto px-4 py-8' });
         main.appendChild(this.contentContainer);
         
         container.appendChild(main);

@@ -1,6 +1,9 @@
 class GalleryPage {
-    constructor(galleryService) {
+    constructor(galleryService, apiService, authService, storage) {
         this.galleryService = galleryService;
+        this.api = apiService;
+        this.authService = authService;
+        this.storage = storage;
         this.images = [];
         this.loading = false;
     }
@@ -102,31 +105,29 @@ class GalleryPage {
         const grid = document.getElementById('gallery-grid');
         if (!grid) return;
 
-        grid.innerHTML = this.images.map(image => `
-            <div class="group overflow-hidden rounded-xl border border-cam-gray bg-white shadow-lg shadow-cam-tan/20 transition-all duration-300 hover:shadow-xl hover:shadow-cam-tan/40 hover:-translate-y-1">
-                <a href="#/post/${image.id}" class="block overflow-hidden">
-                    <img src="${image.imageUrl || image.thumbnailUrl}" alt="Post by ${image.username}" 
-                        class="h-64 w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                        loading="lazy">
-                </a>
-                <div class="p-4">
-                    <div class="flex items-center justify-between text-sm text-gray-500">
-                        <span class="font-medium text-gray-700">@${image.username}</span>
-                        <span>${this.formatDate(image.createdAt)}</span>
-                    </div>
-                    <div class="mt-3 flex items-center gap-4">
-                        <button class="flex items-center gap-1.5 text-gray-600 hover:text-red-500 transition-colors group/btn">
-                            <span class="material-symbols-outlined text-xl ${image.userLiked ? 'fill-current text-red-500' : ''}">favorite</span>
-                            <span class="font-medium">${image.likeCount || 0}</span>
-                        </button>
-                        <button class="flex items-center gap-1.5 text-gray-600 hover:text-cam-olive transition-colors">
-                            <span class="material-symbols-outlined text-xl">chat_bubble</span>
-                            <span class="font-medium">${image.commentCount || 0}</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+        // Clear grid
+        grid.innerHTML = '';
+
+        // Render each image using ImageCard component
+        this.images.forEach(image => {
+            const imageCard = new ImageCard(image, {
+                showDelete: false,
+                apiService: this.api,
+                authService: this.authService,
+                storage: this.storage,
+                onLike: (imageId, isLiked) => {
+                    // Update local state
+                    const img = this.images.find(i => i.id === imageId);
+                    if (img) {
+                        img.isLikedByCurrentUser = isLiked;
+                        img.userLiked = isLiked;
+                        img.likeCount = isLiked ? (img.likeCount + 1) : (img.likeCount - 1);
+                        img.likesCount = img.likeCount;
+                    }
+                }
+            });
+            grid.appendChild(imageCard.render());
+        });
     }
 
     formatDate(dateString) {

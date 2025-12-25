@@ -1,15 +1,39 @@
 # Pending Tasks - Camagru MVC
 
+## Recent Completions
+
+### ✅ Post Detail Page Implementation
+**Status**: COMPLETED  
+**Implementation**:
+- Backend: `PostController.java`, `LikeController.java`, `CommentController.java`
+- Service: `NotificationService.java` (console logging - see SMTP task below)
+- Frontend: `PostPage.js` with full UI, likes, comments
+- Routing: Dynamic route support (`/post/:id`)
+- Features: Like/unlike, add comments, view post details, authentication checks
+- Deployed: Successfully built and running
+
+**Known Limitation**: Email notifications currently log to console (SMTP implementation pending below)
+
 ## High Priority
 
-### 1. Sticker Path Resolution
+### 1. SMTP Email Implementation
+**Issue**: NotificationService only logs to console  
+**Location**: `NotificationService.java` sendEmail() method  
+**Current State**: Console output instead of actual email sending  
+**Required**:
+- Add JavaMail dependency to pom.xml (jakarta.mail 2.0.1)
+- Add SMTP config to AppConfig or environment variables
+- Implement actual email sending with javax.mail API
+- Test with real SMTP server (Gmail, SendGrid, etc.)
+
+### 2. Sticker Path Resolution
 **Issue**: `/api/stickers` endpoint returns empty array  
 **Location**: `StickerUtil.java` line ~20-35  
 **Problem**: Path resolution logic not finding sticker files in `/usr/local/tomcat/webapps/ROOT/stickers/`  
 **Files Exist**: Verified 5 stickers (0-4) with thumbnails  
 **Solution**: Fix `getStickerDirectory()` to correctly resolve deployed webapp path
 
-### 2. User's Own Posts on Profile
+### 3. User's Own Posts on Profile
 **Issue**: Profile page doesn't show user's uploaded images  
 **Location**: `ProfilePage.js` afterRender() method  
 **Current State**: `this.posts = [];` - hardcoded empty array  

@@ -29,7 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const routes = [
         // Public Routes
         { path: '/', component: () => new HomePage(storage) },
-        { path: '/gallery', component: () => new GalleryPage(galleryService) },
+        { path: '/gallery', component: () => new GalleryPage(galleryService, apiService, authService, storage) },
+        { path: '/post/:id', component: () => new PostPage(apiService, authService, storage) },
         
         // Guest Only Routes
         { path: '/login', component: () => new LoginPage(authService), guestOnly: true },
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Protected Routes
         { path: '/upload', component: () => new UploadPage(imageService, stickerService, webcamService), protected: true },
-        { path: '/profile', component: () => new ProfilePage(userService, statsService, authService), protected: true },
+        { path: '/profile', component: () => new ProfilePage(userService, statsService, authService, apiService, storage), protected: true },
         { path: '/settings', component: () => new SettingsPage(userService, authService), protected: true },
         { path: '/change-password', component: () => new ChangePasswordPage(authService), protected: true },
         

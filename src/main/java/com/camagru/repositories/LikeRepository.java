@@ -111,4 +111,33 @@ public class LikeRepository {
         
         return 0;
     }
+    
+    // Convenience methods with alternative names
+    public boolean hasUserLikedImage(Integer userId, Integer imageId) throws SQLException {
+        return isLiked(userId, imageId);
+    }
+    
+    public int countByImageId(Integer imageId) throws SQLException {
+        return getLikeCount(imageId);
+    }
+    
+    public void create(Integer userId, Integer imageId) throws SQLException {
+        String sql = "INSERT INTO likes (user_id, image_id) VALUES (?, ?)";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, imageId);
+            stmt.executeUpdate();
+        }
+    }
+    
+    public void delete(Integer userId, Integer imageId) throws SQLException {
+        String sql = "DELETE FROM likes WHERE user_id = ? AND image_id = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, imageId);
+            stmt.executeUpdate();
+        }
+    }
 }

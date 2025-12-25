@@ -146,15 +146,23 @@ public class ImageService {
      * PHP equivalent: __DIR__ . '/uploads'
      */
     private String getUploadDirectory() {
-        // In servlet context, this should be webapp/uploads
-        // For now, use relative path (will be overridden by Docker volume)
-        return System.getProperty("catalina.base", ".") + "/webapps/ROOT" + AppConfig.UPLOAD_DIR;
+        // Respect absolute paths from configuration (e.g. "/app/uploads").
+        // If UPLOAD_DIR is relative, resolve it under webapps/ROOT.
+        String dir = AppConfig.UPLOAD_DIR;
+        if (dir.startsWith("/")) {
+            return dir;
+        }
+        return System.getProperty("catalina.base", ".") + "/webapps/ROOT" + dir;
     }
     
     /**
      * Get sticker directory path.
      */
     private String getStickerDirectory() {
-        return System.getProperty("catalina.base", ".") + "/webapps/ROOT" + AppConfig.STICKER_DIR;
+        String dir = AppConfig.STICKER_DIR;
+        if (dir.startsWith("/")) {
+            return dir;
+        }
+        return System.getProperty("catalina.base", ".") + "/webapps/ROOT" + dir;
     }
 }

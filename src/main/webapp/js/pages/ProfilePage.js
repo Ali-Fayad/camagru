@@ -1,8 +1,10 @@
 class ProfilePage {
-    constructor(userService, statsService, authService) {
+    constructor(userService, statsService, authService, apiService, storage) {
         this.userService = userService;
         this.statsService = statsService;
         this.authService = authService;
+        this.api = apiService;
+        this.storage = storage;
         this.user = null;
         this.stats = null;
         this.posts = [];
@@ -99,8 +101,8 @@ class ProfilePage {
             const statsResponse = await this.statsService.getUserStats();
             this.stats = statsResponse.data;
             
-            // TODO: Fetch user's own posts from API (not implemented yet)
-            this.posts = [];
+            // Fetch user's own posts from API
+            await this.loadUserPosts();
 
             this.updateProfile();
             this.renderPosts();
@@ -132,6 +134,18 @@ class ProfilePage {
         }
     }
 
+    async loadUserPosts() {
+        try {
+            const response = await this.api.get('/user/images');
+            if (response && response.data && response.data.images) {
+                this.posts = response.data.images;
+            }
+        } catch (error) {
+            console.error('Failed to load user posts:', error);
+            this.posts = [];
+        }
+    }
+
     renderPosts() {
         const grid = document.getElementById('user-posts-grid');
         if (!grid) return;
@@ -150,25 +164,36 @@ class ProfilePage {
             return;
         }
 
-        grid.innerHTML = this.posts.map(post => `
-            <div class="group relative aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-md hover:shadow-xl transition-all duration-300">
-                <img src="${post.imageUrl}" alt="Post" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                
-                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-6 text-white">
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined fill-current">favorite</span>
-                        <span class="font-bold">${post.likes}</span>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="material-symbols-outlined fill-current">chat_bubble</span>
-                        <span class="font-bold">${post.comments}</span>
-                    </div>
-                </div>
-                
-                <button class="absolute top-2 right-2 p-2 bg-white/90 text-red-500 rounded-full opacity-0 group-hover:opacity-100 transition-all hover:bg-white hover:scale-110" title="Delete Post">
-                    <span class="material-symbols-outlined text-sm">delete</span>
-                </button>
-            </div>
-        `).join('');
+        // Clear grid
+        grid.innerHTML = '';
+        
+        // Render each post using ImageCard component
+        this.posts.forEach(post => {
+            const imageCard = new ImageCard(post, {
+                showDelete: true,
+                apiService: this.api,
+                authService: this.authService,
+                storage: this.storage,
+                onDelete: (imageId) => {
+                    // Remove from DOM and update stats
+                    this.posts = this.posts.filter(p => p.id !== imageId);
+                    this.renderPosts();
+                    // Reload stats
+                    this.statsService.getUserStats().then(response => {
+                        this.stats = response.data;
+                        this.updateProfile();
+                    });
+                },
+                onLike: (imageId, isLiked) => {
+                    // Update local state
+                    const post = this.posts.find(p => p.id === imageId);
+                    if (post) {
+                        post.isLikedByCurrentUser = isLiked;
+                        post.likesCount = isLiked ? (post.likesCount + 1) : (post.likesCount - 1);
+                    }
+                }
+            });
+            grid.appendChild(imageCard.render());
+        });
     }
 }

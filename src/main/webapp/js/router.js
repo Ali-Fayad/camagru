@@ -32,8 +32,23 @@ class Router {
         // Remove query params for matching
         const [path, query] = hash.split('?');
         
-        // Find matching route
+        // Find matching route (including dynamic routes)
         let route = this.routes.find(r => r.path === path);
+        let params = {};
+        
+        // If no exact match, try dynamic routes
+        if (!route) {
+            for (const r of this.routes) {
+                if (r.path.includes(':')) {
+                    const match = this.matchDynamicRoute(r.path, path);
+                    if (match) {
+                        route = r;
+                        params = match.params;
+                        break;
+                    }
+                }
+            }
+        }
         
         // 404 handling
         if (!route) {
@@ -59,22 +74,46 @@ class Router {
             return;
         }
 
-        // Render the route
-        await this.renderRoute(route);
+        // Render the route with params
+        await this.renderRoute(route, params);
         
         // Update active state in sidebar/navbar if they exist
         this.updateNavigationState(path);
     }
+    
+    /**
+     * Match dynamic route pattern (e.g., /post/:id)
+     */
+    matchDynamicRoute(pattern, path) {
+        const patternParts = pattern.split('/');
+        const pathParts = path.split('/');
+        
+        if (patternParts.length !== pathParts.length) {
+            return null;
+        }
+        
+        const params = {};
+        for (let i = 0; i < patternParts.length; i++) {
+            if (patternParts[i].startsWith(':')) {
+                const paramName = patternParts[i].slice(1);
+                params[paramName] = pathParts[i];
+            } else if (patternParts[i] !== pathParts[i]) {
+                return null;
+            }
+        }
+        
+        return { params };
+    }
 
-    async renderRoute(route) {
+    async renderRoute(route, params = {}) {
         // Show loading state if needed
         
         try {
             // Create page instance (factory pattern from main.js)
             const page = await route.component();
             
-            // Render page content
-            const content = await page.render();
+            // Render page content with params
+            const content = await page.render(params);
             
             // Inject into Layout
             // We assume a global Layout instance or we re-render layout

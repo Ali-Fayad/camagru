@@ -111,4 +111,27 @@ public class CommentRepository {
             return stmt.executeUpdate() > 0;
         }
     }
+    
+    /**
+     * Count total comments received by user (on all their images).
+     */
+    public int countCommentsForUser(Integer userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM comments c " +
+                     "JOIN images i ON c.image_id = i.id " +
+                     "WHERE i.user_id = ?";
+        
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        
+        return 0;
+    }
 }

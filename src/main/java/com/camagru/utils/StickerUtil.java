@@ -17,7 +17,20 @@ public class StickerUtil {
      * Return the absolute path to the sticker directory.
      */
     public static String getStickerDirectory() {
-        return System.getProperty("catalina.base", ".") + "/webapps/ROOT" + AppConfig.STICKER_DIR;
+        // First try catalina.base (for Tomcat)
+        String catalinaBase = System.getProperty("catalina.base");
+        if (catalinaBase != null && !catalinaBase.isEmpty()) {
+            return catalinaBase + "/webapps/ROOT" + AppConfig.STICKER_DIR;
+        }
+        
+        // Fallback to hardcoded Tomcat path
+        File tomcatDir = new File("/usr/local/tomcat/webapps/ROOT" + AppConfig.STICKER_DIR);
+        if (tomcatDir.exists()) {
+            return tomcatDir.getAbsolutePath();
+        }
+        
+        // Last resort: current directory
+        return "." + AppConfig.STICKER_DIR;
     }
 
     /**
@@ -32,7 +45,9 @@ public class StickerUtil {
 
         String[] files = d.list((f, name) -> {
             String lower = name.toLowerCase();
-            return lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+            boolean isImage = lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+            boolean isNotThumbnail = !lower.contains("_thumb");
+            return isImage && isNotThumbnail;
         });
 
         if (files == null || files.length == 0) {

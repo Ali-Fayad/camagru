@@ -1,8 +1,10 @@
 class ProfilePage {
-    constructor(apiService, authService) {
-        this.apiService = apiService;
+    constructor(userService, statsService, authService) {
+        this.userService = userService;
+        this.statsService = statsService;
         this.authService = authService;
         this.user = null;
+        this.stats = null;
         this.posts = [];
     }
 
@@ -83,33 +85,51 @@ class ProfilePage {
 
     async afterRender() {
         try {
-            // Mock data
-            this.user = {
-                username: 'johndoe',
-                bio: 'Photography enthusiast 📸 | Travel ✈️ | Coffee ☕',
-                stats: { posts: 12, likes: 450, comments: 89 }
-            };
+            // Load real user data from localStorage
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                this.user = JSON.parse(storedUser);
+            } else {
+                // Fallback: fetch from API
+                const profile = await this.userService.getProfile();
+                this.user = profile.data;
+            }
             
-            this.posts = Array(12).fill(0).map((_, i) => ({
-                id: i,
-                imageUrl: `https://picsum.photos/seed/${i + 100}/400/400`,
-                likes: Math.floor(Math.random() * 100),
-                comments: Math.floor(Math.random() * 20)
-            }));
+            // Fetch real stats from API
+            const statsResponse = await this.statsService.getUserStats();
+            this.stats = statsResponse.data;
+            
+            // TODO: Fetch user's own posts from API (not implemented yet)
+            this.posts = [];
 
             this.updateProfile();
             this.renderPosts();
         } catch (error) {
             console.error('Failed to load profile:', error);
+            ErrorHandler.showError('Failed to load profile data');
         }
     }
 
     updateProfile() {
-        document.getElementById('profile-username').textContent = `@${this.user.username}`;
-        document.getElementById('profile-bio').textContent = this.user.bio;
-        document.getElementById('posts-count').textContent = this.user.stats.posts;
-        document.getElementById('likes-count').textContent = this.user.stats.likes;
-        document.getElementById('comments-count').textContent = this.user.stats.comments;
+        const usernameEl = document.getElementById('profile-username');
+        const bioEl = document.getElementById('profile-bio');
+        const postsCountEl = document.getElementById('posts-count');
+        const likesCountEl = document.getElementById('likes-count');
+        const commentsCountEl = document.getElementById('comments-count');
+        
+        if (usernameEl && this.user) {
+            usernameEl.textContent = `@${this.user.username}`;
+        }
+        
+        if (bioEl) {
+            bioEl.textContent = 'Photography enthusiast 📸';
+        }
+        
+        if (this.stats) {
+            if (postsCountEl) postsCountEl.textContent = this.stats.imageCount || 0;
+            if (likesCountEl) likesCountEl.textContent = this.stats.totalLikesReceived || 0;
+            if (commentsCountEl) commentsCountEl.textContent = this.stats.totalCommentsReceived || 0;
+        }
     }
 
     renderPosts() {

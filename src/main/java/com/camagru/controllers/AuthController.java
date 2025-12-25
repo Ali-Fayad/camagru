@@ -75,7 +75,7 @@ public class AuthController extends HttpServlet {
         
         User user = authService.register(username, email, password);
         
-        sendJsonResponse(resp, 200, ApiResponse.success(
+        sendJsonResponse(resp, 201, ApiResponse.success(
             "Registration successful! Check your email for verification code.",
             Map.of("userId", user.getId())
         ));
@@ -87,10 +87,18 @@ public class AuthController extends HttpServlet {
         String email = (String) body.get("email");
         String code = (String) body.get("code");
         
-        boolean verified = authService.verify(email, code);
+        Session session = authService.verifyAndLogin(email, code);
         
-        if (verified) {
-            sendJsonResponse(resp, 200, ApiResponse.success("Email verified successfully!"));
+        if (session != null) {
+            // Set session cookie
+            Cookie sessionCookie = new Cookie("CAMAGRU_SESSION", session.getId());
+            sessionCookie.setHttpOnly(true);
+            sessionCookie.setPath("/");
+            sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+            resp.addCookie(sessionCookie);
+
+            sendJsonResponse(resp, 200, ApiResponse.success("Email verified successfully!", 
+                Map.of("sessionId", session.getId())));
         } else {
             sendJsonResponse(resp, 400, ApiResponse.error("Invalid or expired verification code", "INVALID_VERIFICATION"));
         }
@@ -102,17 +110,27 @@ public class AuthController extends HttpServlet {
         String email = (String) body.get("email");
         String password = (String) body.get("password");
         
-        Session session = authService.login(email, password);
-        
-        // Set session cookie
-        Cookie sessionCookie = new Cookie("CAMAGRU_SESSION", session.getId());
-        sessionCookie.setHttpOnly(true);
-        sessionCookie.setPath("/");
-        sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
-        resp.addCookie(sessionCookie);
-        
-        sendJsonResponse(resp, 200, ApiResponse.success("Login successful", 
-            Map.of("sessionId", session.getId())));
+        try {
+            Session session = authService.login(email, password);
+            
+            // Set session cookie
+            Cookie sessionCookie = new Cookie("CAMAGRU_SESSION", session.getId());
+            sessionCookie.setHttpOnly(true);
+            sessionCookie.setPath("/");
+            sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+            resp.addCookie(sessionCookie);
+            
+            sendJsonResponse(resp, 200, ApiResponse.success("Login successful", 
+                Map.of("sessionId", session.getId())));
+        } catch (IllegalArgumentException e) {
+            if ("Email not verified".equals(e.getMessage())) {
+                sendJsonResponse(resp, 201, ApiResponse.success("Email not verified. Please verify your account.", 
+                    Map.of("requiresVerification", true)));
+            } else {
+                // Invalid credentials or other validation errors
+                sendJsonResponse(resp, 401, ApiResponse.error(e.getMessage(), "INVALID_CREDENTIALS"));
+            }
+        }
     }
     
     private void handleLogout(HttpServletRequest req, HttpServletResponse resp) throws Exception {

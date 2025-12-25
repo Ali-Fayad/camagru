@@ -23,7 +23,11 @@ class AuthService {
     }
 
     async verify(email, code) {
-        return this.api.post('/verify', { email, code });
+        const response = await this.api.post('/verify', { email, code });
+        if (response.data && response.data.sessionId) {
+            await this.fetchCurrentUser();
+        }
+        return response;
     }
 
     async logout() {

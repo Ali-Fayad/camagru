@@ -90,7 +90,16 @@ class LoginPage {
             const password = formData.get('password');
 
             try {
-                await this.authService.login(email, password);
+                const response = await this.authService.login(email, password);
+                
+                // Check if verification is required (status 201)
+                if (response && response._status === 201) {
+                    localStorage.setItem('pendingVerificationEmail', email);
+                    window.location.hash = '#/verify';
+                    return;
+                }
+
+                // Successful login, go to home
                 window.location.hash = '#/';
             } catch (error) {
                 errorMsg.textContent = error.message || 'Invalid email or password';

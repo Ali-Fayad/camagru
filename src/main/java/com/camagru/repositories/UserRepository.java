@@ -230,6 +230,22 @@ public class UserRepository {
     }
     
     /**
+     * Delete user account.
+     * Cascade deletes will handle related data (images, comments, likes, sessions).
+     */
+    public boolean deleteUser(Integer userId) throws SQLException {
+        String sql = "DELETE FROM users WHERE id = ?";
+        
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            
+            return stmt.executeUpdate() > 0;
+        }
+    }
+    
+    /**
      * Map ResultSet to User object.
      */
     private User mapResultSetToUser(ResultSet rs) throws SQLException {

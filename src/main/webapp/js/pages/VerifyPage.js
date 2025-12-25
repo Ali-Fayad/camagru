@@ -4,6 +4,7 @@ class VerifyPage {
     }
 
     async render() {
+        const email = localStorage.getItem('pendingVerificationEmail') || 'your email';
         const container = DOM.create('div', { className: 'flex min-h-[80vh] items-center justify-center animate-fade-in' });
         
         container.innerHTML = `
@@ -13,7 +14,7 @@ class VerifyPage {
                         <span class="material-symbols-outlined text-3xl">mark_email_read</span>
                     </div>
                     <h2 class="text-3xl font-bold text-gray-800">Check Your Email</h2>
-                    <p class="mt-2 text-gray-600">We've sent a verification code to you. Please enter it below to continue.</p>
+                    <p class="mt-2 text-gray-600">We've sent a verification code to <strong>${email}</strong>. Please enter it below to continue.</p>
                 </div>
                 
                 <form id="verify-form" class="space-y-6">
@@ -47,6 +48,12 @@ class VerifyPage {
     }
 
     async afterRender() {
+        const email = localStorage.getItem('pendingVerificationEmail');
+        if (!email) {
+            window.location.hash = '#/login';
+            return;
+        }
+
         const form = document.getElementById('verify-form');
         const errorMsg = document.getElementById('error-msg');
         const successMsg = document.getElementById('success-msg');
@@ -71,11 +78,12 @@ class VerifyPage {
             submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
 
             try {
-                await this.authService.verify(code);
+                await this.authService.verify(email, code);
                 successMsg.textContent = 'Email verified successfully!';
                 successMsg.classList.remove('hidden');
+                localStorage.removeItem('pendingVerificationEmail');
                 setTimeout(() => {
-                    window.location.hash = '#/login';
+                    window.location.hash = '#/';
                 }, 2000);
             } catch (error) {
                 errorMsg.textContent = error.message || 'Verification failed. Invalid code.';

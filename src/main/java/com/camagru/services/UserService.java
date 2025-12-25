@@ -88,4 +88,12 @@ public class UserService {
     public boolean updateNotifications(Integer userId, boolean receiveNotifications) throws SQLException {
         return userRepository.updateNotifications(userId, receiveNotifications);
     }
+    
+    /**
+     * Delete user account and all associated data.
+     * Cascading deletes will handle images, comments, likes, and sessions.
+     */
+    public boolean deleteAccount(Integer userId) throws SQLException {
+        return userRepository.deleteUser(userId);
+    }
 }

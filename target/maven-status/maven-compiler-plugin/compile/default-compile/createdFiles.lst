@@ -7,8 +7,10 @@ com/camagru/dtos/requests/ImageUploadRequest.class
 com/camagru/filters/CorsFilter.class
 com/camagru/controllers/ImageController.class
 com/camagru/utils/FileUtil.class
+com/camagru/controllers/DeleteAccountController.class
 com/camagru/services/UserService.class
 com/camagru/filters/JsonFilter.class
+com/camagru/controllers/StatsController.class
 com/camagru/services/SessionService.class
 com/camagru/config/EmailConfig.class
 com/camagru/utils/PasswordUtil.class
@@ -20,6 +22,7 @@ com/camagru/repositories/UserRepository.class
 com/camagru/dtos/requests/RegisterRequest.class
 com/camagru/dtos/responses/ApiResponse.class
 com/camagru/services/EmailService.class
+com/camagru/services/StatsService.class
 com/camagru/controllers/UserController.class
 com/camagru/models/Session.class
 com/camagru/services/AuthService.class
@@ -32,9 +35,11 @@ com/camagru/dtos/responses/ImageResponse.class
 com/camagru/models/User.class
 com/camagru/services/GalleryService.class
 com/camagru/repositories/ImageRepository.class
+com/camagru/controllers/StickerController.class
 com/camagru/models/Like.class
 com/camagru/models/Comment.class
 com/camagru/config/EmailConfig$1.class
+com/camagru/services/StickerService.class
 com/camagru/utils/StickerUtil.class
 com/camagru/utils/ImageUtil.class
 com/camagru/models/Image.class

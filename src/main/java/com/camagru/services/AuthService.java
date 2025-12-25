@@ -70,12 +70,17 @@ public class AuthService {
     }
     
     /**
-     * Verify user with 6-digit code.
+     * Verify user with 6-digit code and login.
      */
-    public boolean verify(String email, String code) throws SQLException {
-        return userRepository.verifyUser(email, code);
+    public Session verifyAndLogin(String email, String code) throws SQLException {
+        if (userRepository.verifyUser(email, code)) {
+            User user = userRepository.findByEmail(email);
+            String sessionId = generateSessionId(user.getId());
+            return sessionRepository.create(sessionId, user.getId());
+        }
+        return null;
     }
-    
+
     /**
      * Login user and create session.
      */

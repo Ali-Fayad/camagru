@@ -144,8 +144,7 @@ public class ImageRepository {
     /**
      * Check if user owns image.
      */
-    public boolean isOwner(Integer imageId, Integer userId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM images WHERE id = ? AND user_id = ?";
+    public boolean isOwner(Integer imageId, Integer userId) throws SQLException {        String sql = "SELECT COUNT(*) FROM images WHERE id = ? AND user_id = ?";
         
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -161,6 +160,27 @@ public class ImageRepository {
         }
         
         return false;
+    }
+    
+    /**
+     * Count images by user ID.
+     */
+    public int countByUserId(Integer userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM images WHERE user_id = ?";
+        
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        
+        return 0;
     }
     
     /**

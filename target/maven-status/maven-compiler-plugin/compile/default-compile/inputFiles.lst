@@ -1,4 +1,5 @@
 /home/afayad/java-web-app/src/main/java/com/camagru/services/EmailService.java
+/home/afayad/java-web-app/src/main/java/com/camagru/controllers/StatsController.java
 /home/afayad/java-web-app/src/main/java/com/camagru/services/GalleryService.java
 /home/afayad/java-web-app/src/main/java/com/camagru/models/Comment.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/responses/ImageResponse.java
@@ -15,16 +16,20 @@
 /home/afayad/java-web-app/src/main/java/com/camagru/filters/JsonFilter.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/responses/ApiResponse.java
 /home/afayad/java-web-app/src/main/java/com/camagru/services/CommentService.java
+/home/afayad/java-web-app/src/main/java/com/camagru/services/StatsService.java
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/UserController.java
+/home/afayad/java-web-app/src/main/java/com/camagru/controllers/StickerController.java
 /home/afayad/java-web-app/src/main/java/com/camagru/utils/FileUtil.java
 /home/afayad/java-web-app/src/main/java/com/camagru/repositories/UserRepository.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/requests/CommentRequest.java
 /home/afayad/java-web-app/src/main/java/com/camagru/utils/PasswordUtil.java
+/home/afayad/java-web-app/src/main/java/com/camagru/controllers/DeleteAccountController.java
 /home/afayad/java-web-app/src/main/java/com/camagru/models/Image.java
 /home/afayad/java-web-app/src/main/java/com/camagru/repositories/CommentRepository.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/requests/RegisterRequest.java
 /home/afayad/java-web-app/src/main/java/com/camagru/utils/ImageUtil.java
 /home/afayad/java-web-app/src/main/java/com/camagru/config/AppConfig.java
+/home/afayad/java-web-app/src/main/java/com/camagru/services/StickerService.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/requests/ImageUploadRequest.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/responses/UserResponse.java
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/AuthController.java

@@ -125,13 +125,24 @@ class RegisterPage {
             submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
 
             try {
-                await this.authService.register(username, email, password);
-                successMsg.textContent = 'Registration successful! Please check your email to verify your account.';
+                const response = await this.authService.register(username, email, password);
+                
+                // Always expect 201 from registration (requires verification)
+                if (response && response._status === 201) {
+                    localStorage.setItem('pendingVerificationEmail', email);
+                    successMsg.textContent = 'Registration successful! Redirecting to verification...';
+                    successMsg.classList.remove('hidden');
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.hash = '#/verify';
+                    }, 1500);
+                    return;
+                }
+
+                // Fallback (shouldn't happen)
+                successMsg.textContent = 'Registration successful! Please check your email.';
                 successMsg.classList.remove('hidden');
                 form.reset();
-                setTimeout(() => {
-                    window.location.hash = '#/login';
-                }, 3000);
             } catch (error) {
                 errorMsg.textContent = error.message || 'Registration failed. Please try again.';
                 errorMsg.classList.remove('hidden');

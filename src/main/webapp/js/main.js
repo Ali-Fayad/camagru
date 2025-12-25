@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageService = new ImageService(apiService);
     const galleryService = new GalleryService(apiService);
     const commentService = new CommentService(apiService);
+    const statsService = new StatsService(apiService);
     const stickerService = new StickerService(apiService);
     const webcamService = new WebcamService();
 
@@ -28,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const routes = [
         // Public Routes
         { path: '/', component: () => new HomePage(storage) },
-        { path: '/gallery', component: () => new GalleryPage(galleryService, commentService) },
+        { path: '/gallery', component: () => new GalleryPage(galleryService) },
         
         // Guest Only Routes
         { path: '/login', component: () => new LoginPage(authService), guestOnly: true },
@@ -39,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Protected Routes
         { path: '/upload', component: () => new UploadPage(imageService, stickerService, webcamService), protected: true },
-        { path: '/profile', component: () => new ProfilePage(userService, authService), protected: true },
-        { path: '/settings', component: () => new SettingsPage(userService), protected: true },
+        { path: '/profile', component: () => new ProfilePage(userService, statsService, authService), protected: true },
+        { path: '/settings', component: () => new SettingsPage(userService, authService), protected: true },
         { path: '/change-password', component: () => new ChangePasswordPage(authService), protected: true },
         
         // Fallback
@@ -49,4 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize Router
     const router = new Router(routes, storage);
+    
+    // Handle Logout Event
+    window.addEventListener('app:logout', async () => {
+        try {
+            await authService.logout();
+            window.location.hash = '#/login';
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Force logout even if API fails
+            storage.clearAuth();
+            window.location.hash = '#/login';
+        }
+    });
 });

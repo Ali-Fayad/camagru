@@ -88,4 +88,27 @@ public class LikeRepository {
         
         return 0;
     }
+    
+    /**
+     * Count total likes received by user (on all their images).
+     */
+    public int countLikesForUser(Integer userId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM likes l " +
+                     "JOIN images i ON l.image_id = i.id " +
+                     "WHERE i.user_id = ?";
+        
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setInt(1, userId);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        
+        return 0;
+    }
 }

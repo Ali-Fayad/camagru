@@ -15,6 +15,7 @@
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/ImageController.java
 /home/afayad/java-web-app/src/main/java/com/camagru/filters/JsonFilter.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/responses/ApiResponse.java
+/home/afayad/java-web-app/src/main/java/com/camagru/dtos/StickerPlacement.java
 /home/afayad/java-web-app/src/main/java/com/camagru/services/CommentService.java
 /home/afayad/java-web-app/src/main/java/com/camagru/services/StatsService.java
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/UserController.java

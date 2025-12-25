@@ -5,7 +5,6 @@ com/camagru/utils/ValidationUtil.class
 com/camagru/repositories/LikeRepository.class
 com/camagru/dtos/requests/ImageUploadRequest.class
 com/camagru/filters/CorsFilter.class
-com/camagru/controllers/ImageController.class
 com/camagru/utils/FileUtil.class
 com/camagru/controllers/DeleteAccountController.class
 com/camagru/services/UserService.class

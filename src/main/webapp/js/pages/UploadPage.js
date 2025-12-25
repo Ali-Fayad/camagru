@@ -99,17 +99,12 @@ class UploadPage {
                     <div class="rounded-3xl border border-cam-gray bg-white p-6 shadow-xl shadow-cam-tan/20 sticky top-24">
                         <div class="flex items-center justify-between mb-4">
                             <h3 class="text-lg font-bold text-gray-900">Add Stickers</h3>
-                            <span class="text-xs font-bold text-cam-olive bg-cam-cream px-2 py-1 rounded-full border border-cam-olive/20">4 available</span>
+                            <span class="text-xs font-bold text-cam-olive bg-cam-cream px-2 py-1 rounded-full border border-cam-olive/20" id="sticker-count">0 available</span>
                         </div>
-                        <p class="text-sm text-gray-500 mb-4">Click a sticker to add it to your photo.</p>
+                        <p class="text-sm text-gray-500 mb-4">Double-click a sticker to add it to your photo, then drag to position.</p>
                         
                         <div class="grid grid-cols-2 gap-4" id="stickers-grid">
-                            ${this.getStickers().map((sticker, i) => `
-                                <button class="sticker-btn aspect-square rounded-xl bg-gray-50 border border-gray-200 hover:border-cam-olive hover:bg-cam-cream transition-all p-2 flex items-center justify-center group relative overflow-hidden" data-sticker="${i}">
-                                    <img src="${sticker}" alt="Sticker ${i+1}" class="w-full h-full object-contain group-hover:scale-110 transition-transform">
-                                    <div class="absolute inset-0 bg-cam-olive/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                </button>
-                            `).join('')}
+                            <!-- Stickers loaded dynamically -->
                         </div>
                     </div>
                 </div>
@@ -119,20 +114,36 @@ class UploadPage {
         return container;
     }
 
-    getStickers() {
-        return [
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuBDivAl7-KlDazEG0oSOzi2TWUvUptRtwq1hHthS_bOhT2KRAz4X-njUwOLUxigeNrs6IIvs1Bu-jNGWMGwkvsgbYUDk85aSfByE8tNu2jyzMbAM-1fvbx5iNa2q6qKJBB15VPm5OoqTW6TBq9M3-tuEx75SnCuWb2qMywITBApIuE3qmEhX-A3GNs8-xwRKnDh7yssfxaS6QD_mSJa1_j-4O5wpSdYhtUQ9rwFv4-odznfwlD0lSqjG8tNKh98w1TvidF-_Vm1ICo",
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuAiEKar4jbdBqVYXVDBrURlLHAudVkpJJLYgWvhiIm140X-_DSTndWNPMMbwKEtiWEpHyJoQq-gyZuX44o1sDSy91hJutl8toweJSMWvaGPQdZBYFnQY49WOBG0YCybzRWcu5XziET--bKI-I88D7r1GresjPnu_hNH7ib_ETDBhBQEnwnJI_XCT_lPBdZSXDUJ0Oc1YmKo-iDJ8gEtmqoV3DXdBrt3oxXHirxQL1h_jAGTvQAcoAJMeB2lYXQIItLTkFBQUSDUnts",
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuDGu5XPyHnbK9LvOtfpsp7q_DSG3xYPJP4rcrlCfqoL3RhwVwsaIZQB-oGWHnI7BKtqS72Yx51eY85-5Za_r38QLbeH4AlPBcreDy458pK44uo40kL83KsETD_d-SsmeU7E0ntHslWVvAX629OjcD8bjt4CsgvZ5n_-3tTha06GVBtFdk1c3cp1xdj365lnAq4T1Jk-z3sE2mNWU2NZ0Ey8zAZuCU09acQwlIaUe3SBgzjX6dCVy_LnEoJNGeGih-K54kN_bHhk_q0",
-            "https://lh3.googleusercontent.com/aida-public/AB6AXuCp0hfQK77FTJikssWXZBlMExfpT23e5uMzkLN2NxPEw9TUoxbp_QhKjdxzbjaXLCkPxE2INpn6KBzMieBtPRS2HTrwtiMH4uxSkYIZcdDPn-zumLKIz9-YN8pIzNX7h5Zd_-n3alSdoau8qFOtIT0Fid5tpeX_N67fnvkruh9eBvZZSF-VUvgbGjitMhB5wiwXiChubuSNlGMiRyzco_gcbxdHqGf2gLPQs7xjVURnsG0n2aiehZdFDDu9zuYXpKT87s-0liVWCxg"
+    async loadStickers() {
+        // Load stickers directly from frontend static files
+        this.availableStickers = [
+            { id: 0, name: 'Cat Ears', url: '/stickers/0_cat_ears.png' },
+            { id: 1, name: 'Glasses', url: '/stickers/1_glasses.png' },
+            { id: 2, name: 'Mustache', url: '/stickers/2_mustache.png' },
+            { id: 3, name: 'Crown', url: '/stickers/3_crown.png' },
+            { id: 4, name: 'Heart', url: '/stickers/4_heart.png' }
         ];
+        
+        const grid = document.getElementById('stickers-grid');
+        const count = document.getElementById('sticker-count');
+        
+        count.textContent = `${this.availableStickers.length} available`;
+        grid.innerHTML = this.availableStickers.map((sticker, i) => `
+            <div class="sticker-item aspect-square rounded-xl bg-gray-50 border border-gray-200 hover:border-cam-olive hover:bg-cam-cream transition-all p-2 flex items-center justify-center group relative overflow-hidden cursor-pointer" data-sticker="${i}">
+                <img src="${sticker.url}" alt="${sticker.name}" class="w-full h-full object-contain group-hover:scale-110 transition-transform" draggable="false">
+                <div class="absolute inset-0 bg-cam-olive/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                <span class="absolute bottom-1 left-1 right-1 text-xs text-center text-gray-700 bg-white/80 rounded px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">${sticker.name}</span>
+            </div>
+        `).join('');
+        
+        this.setupStickers();
     }
 
     async afterRender() {
         this.setupTabs();
         this.setupWebcam();
         this.setupFileUpload();
-        this.setupStickers();
+        await this.loadStickers();
         this.setupPublish();
     }
 
@@ -197,12 +208,22 @@ class UploadPage {
         captureBtn.addEventListener('click', () => {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
-            canvas.getContext('2d').drawImage(video, 0, 0);
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            
+            // Store base image for re-rendering with stickers
+            canvas.baseImage = video;
+            
+            // Clear placed stickers when capturing new image
+            this.placedStickers = [];
             
             video.classList.add('hidden');
             canvas.classList.remove('hidden');
             captureBtn.classList.add('hidden');
             retakeBtn.classList.remove('hidden');
+            
+            // Setup canvas interaction for dragging stickers
+            this.setupCanvasInteraction(canvas);
             
             // Stop stream to save battery/resource
             // this.stopCamera(); 
@@ -246,9 +267,37 @@ class UploadPage {
             if (file) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    previewImg.src = e.target.result;
-                    previewDiv.classList.remove('hidden');
-                    dropZone.classList.add('hidden');
+                    const img = new Image();
+                    img.onload = () => {
+                        // Create/update canvas for upload
+                        let canvas = document.getElementById('upload-canvas');
+                        if (!canvas) {
+                            canvas = document.createElement('canvas');
+                            canvas.id = 'upload-canvas';
+                            canvas.className = 'w-full h-auto rounded-xl';
+                            previewDiv.insertBefore(canvas, previewDiv.firstChild);
+                        }
+                        
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        
+                        // Store base image
+                        canvas.baseImage = img;
+                        
+                        // Clear placed stickers when uploading new image
+                        this.placedStickers = [];
+                        
+                        previewImg.classList.add('hidden');
+                        canvas.classList.remove('hidden');
+                        previewDiv.classList.remove('hidden');
+                        dropZone.classList.add('hidden');
+                        
+                        // Setup canvas interaction
+                        this.setupCanvasInteraction(canvas);
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -262,23 +311,225 @@ class UploadPage {
     }
 
     setupStickers() {
-        const stickers = document.querySelectorAll('.sticker-btn');
-        stickers.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Toggle selection visual
-                stickers.forEach(s => s.classList.remove('ring-2', 'ring-cam-olive'));
-                btn.classList.add('ring-2', 'ring-cam-olive');
-                
-                // Store selected sticker index
-                this.selectedStickerIndex = parseInt(btn.dataset.sticker);
-                console.log('Selected sticker:', this.selectedStickerIndex);
+        const stickers = document.querySelectorAll('.sticker-item');
+        stickers.forEach(item => {
+            item.addEventListener('dblclick', () => {
+                const stickerIndex = parseInt(item.dataset.sticker);
+                this.addStickerToCanvas(stickerIndex);
             });
         });
-        
-        // Default to first sticker
-        if (stickers.length > 0) {
-            stickers[0].click();
+    }
+    
+    addStickerToCanvas(stickerIndex) {
+        const canvas = this.getActiveCanvas();
+        if (!canvas) {
+            alert('Please capture or upload an image first!');
+            return;
         }
+        
+        const sticker = this.availableStickers[stickerIndex];
+        if (!sticker) return;
+        
+        // Add sticker at center with default size (20% of canvas width)
+        const stickerWidth = canvas.width * 0.2;
+        const stickerHeight = stickerWidth; // Keep square for now, will adjust based on image aspect
+        
+        const placedSticker = {
+            stickerIndex,
+            url: sticker.url,
+            x: (canvas.width - stickerWidth) / 2,
+            y: (canvas.height - stickerHeight) / 2,
+            width: stickerWidth,
+            height: stickerHeight
+        };
+        
+        this.placedStickers.push(placedSticker);
+        this.renderCanvas();
+    }
+    
+    getActiveCanvas() {
+        const webcamCanvas = document.getElementById('webcam-canvas');
+        if (webcamCanvas && !webcamCanvas.classList.contains('hidden')) {
+            return webcamCanvas;
+        }
+        
+        const uploadCanvas = document.getElementById('upload-canvas');
+        if (uploadCanvas && !uploadCanvas.classList.contains('hidden')) {
+            return uploadCanvas;
+        }
+        
+        return null;
+    }
+    
+    renderCanvas() {
+        const canvas = this.getActiveCanvas();
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        
+        // Redraw base image
+        const baseImage = canvas.baseImage;
+        if (baseImage) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(baseImage, 0, 0, canvas.width, canvas.height);
+        }
+        
+        // Draw all placed stickers
+        this.placedStickers.forEach((sticker, index) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+                ctx.drawImage(img, sticker.x, sticker.y, sticker.width, sticker.height);
+                
+                // Draw border and delete button if being dragged or hovered
+                if (this.draggedSticker === index || this.hoveredSticker === index) {
+                    // Border
+                    ctx.strokeStyle = '#86A873';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(sticker.x, sticker.y, sticker.width, sticker.height);
+                    
+                    // Delete button (top-right corner)
+                    const btnSize = 24;
+                    const btnX = sticker.x + sticker.width - btnSize;
+                    const btnY = sticker.y;
+                    
+                    // Red circle background
+                    ctx.fillStyle = '#EF4444';
+                    ctx.beginPath();
+                    ctx.arc(btnX + btnSize/2, btnY + btnSize/2, btnSize/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    // White X
+                    ctx.strokeStyle = 'white';
+                    ctx.lineWidth = 2;
+                    const offset = 6;
+                    ctx.beginPath();
+                    ctx.moveTo(btnX + offset, btnY + offset);
+                    ctx.lineTo(btnX + btnSize - offset, btnY + btnSize - offset);
+                    ctx.moveTo(btnX + btnSize - offset, btnY + offset);
+                    ctx.lineTo(btnX + offset, btnY + btnSize - offset);
+                    ctx.stroke();
+                    
+                    // Store delete button bounds for click detection
+                    sticker._deleteBtnX = btnX;
+                    sticker._deleteBtnY = btnY;
+                    sticker._deleteBtnSize = btnSize;
+                }
+            };
+            img.src = sticker.url;
+        });
+    }
+    
+    setupCanvasInteraction(canvas) {
+        let isDragging = false;
+        let dragStartX, dragStartY;
+        let selectedStickerIndex = null;
+        this.hoveredSticker = null;
+        
+        const getMousePos = (e) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        };
+        
+        const isInDeleteButton = (pos, sticker) => {
+            if (!sticker._deleteBtnX) return false;
+            const btnCenterX = sticker._deleteBtnX + sticker._deleteBtnSize / 2;
+            const btnCenterY = sticker._deleteBtnY + sticker._deleteBtnSize / 2;
+            const distance = Math.sqrt(
+                Math.pow(pos.x - btnCenterX, 2) + Math.pow(pos.y - btnCenterY, 2)
+            );
+            return distance <= sticker._deleteBtnSize / 2;
+        };
+        
+        canvas.addEventListener('mousedown', (e) => {
+            const pos = getMousePos(e);
+            
+            // Find clicked sticker (check in reverse order to get top-most)
+            for (let i = this.placedStickers.length - 1; i >= 0; i--) {
+                const sticker = this.placedStickers[i];
+                
+                // Check if clicking delete button
+                if (isInDeleteButton(pos, sticker)) {
+                    this.placedStickers.splice(i, 1);
+                    this.renderCanvas();
+                    return;
+                }
+                
+                // Check if clicking sticker body
+                if (pos.x >= sticker.x && pos.x <= sticker.x + sticker.width &&
+                    pos.y >= sticker.y && pos.y <= sticker.y + sticker.height) {
+                    isDragging = true;
+                    selectedStickerIndex = i;
+                    this.draggedSticker = i;
+                    dragStartX = pos.x - sticker.x;
+                    dragStartY = pos.y - sticker.y;
+                    canvas.style.cursor = 'grabbing';
+                    break;
+                }
+            }
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            const pos = getMousePos(e);
+            
+            if (isDragging && selectedStickerIndex !== null) {
+                const sticker = this.placedStickers[selectedStickerIndex];
+                sticker.x = pos.x - dragStartX;
+                sticker.y = pos.y - dragStartY;
+                
+                // Keep within bounds
+                sticker.x = Math.max(0, Math.min(canvas.width - sticker.width, sticker.x));
+                sticker.y = Math.max(0, Math.min(canvas.height - sticker.height, sticker.y));
+                
+                this.renderCanvas();
+            } else {
+                // Check if hovering over a sticker
+                let hovering = false;
+                let newHoveredSticker = null;
+                
+                for (let i = this.placedStickers.length - 1; i >= 0; i--) {
+                    const sticker = this.placedStickers[i];
+                    if (pos.x >= sticker.x && pos.x <= sticker.x + sticker.width &&
+                        pos.y >= sticker.y && pos.y <= sticker.y + sticker.height) {
+                        hovering = true;
+                        newHoveredSticker = i;
+                        break;
+                    }
+                }
+                
+                // Update hover state and re-render if changed
+                if (newHoveredSticker !== this.hoveredSticker) {
+                    this.hoveredSticker = newHoveredSticker;
+                    this.renderCanvas();
+                }
+                
+                canvas.style.cursor = hovering ? 'grab' : 'default';
+            }
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+            selectedStickerIndex = null;
+            this.draggedSticker = null;
+            canvas.style.cursor = 'default';
+            this.renderCanvas();
+        });
+        
+        canvas.addEventListener('mouseleave', () => {
+            if (isDragging) {
+                isDragging = false;
+                selectedStickerIndex = null;
+                this.draggedSticker = null;
+                canvas.style.cursor = 'default';
+            }
+            this.hoveredSticker = null;
+            this.renderCanvas();
+        });
     }
     
     async setupPublish() {
@@ -287,43 +538,40 @@ class UploadPage {
         
         publishBtn.addEventListener('click', async () => {
             try {
+                // Validate at least one sticker
+                if (this.placedStickers.length === 0) {
+                    alert('Please add at least one sticker to your photo!');
+                    return;
+                }
+                
                 // Get caption
                 const caption = messageInput.value.trim();
                 
-                // Get image data
-                let imageData = null;
-                let useWebcam = false;
-                
-                // Check webcam canvas first
-                const webcamCanvas = document.getElementById('webcam-canvas');
-                if (webcamCanvas && !webcamCanvas.classList.contains('hidden')) {
-                    imageData = webcamCanvas.toDataURL('image/jpeg', 0.9);
-                    useWebcam = true;
-                } else {
-                    // Check upload preview
-                    const previewImg = document.getElementById('preview-image');
-                    if (previewImg && previewImg.src && !document.getElementById('upload-preview').classList.contains('hidden')) {
-                        imageData = previewImg.src;
-                        useWebcam = false;
-                    }
-                }
-                
-                if (!imageData) {
+                // Get image data from active canvas
+                const canvas = this.getActiveCanvas();
+                if (!canvas) {
                     alert('Please capture or upload an image first!');
                     return;
                 }
                 
-                if (this.selectedStickerIndex === undefined) {
-                    alert('Please select a sticker!');
-                    return;
-                }
+                const imageData = canvas.toDataURL('image/jpeg', 0.9);
+                const useWebcam = canvas.id === 'webcam-canvas';
+                
+                // Prepare sticker data (convert to relative positions 0-1)
+                const stickers = this.placedStickers.map(s => ({
+                    stickerIndex: s.stickerIndex,
+                    x: s.x / canvas.width,
+                    y: s.y / canvas.height,
+                    width: s.width / canvas.width,
+                    height: s.height / canvas.height
+                }));
                 
                 // Disable button during upload
                 publishBtn.disabled = true;
                 publishBtn.textContent = 'Publishing...';
                 
-                // Upload image using ImageService
-                const response = await this.imageService.uploadImage(imageData, this.selectedStickerIndex, useWebcam, caption);
+                // Upload image using ImageService with stickers array
+                const response = await this.imageService.uploadImage(imageData, stickers, useWebcam, caption);
                 
                 if (response.success) {
                     alert('Post published successfully!');

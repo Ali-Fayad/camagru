@@ -1,6 +1,7 @@
 package com.camagru.services;
 
 import com.camagru.config.AppConfig;
+import com.camagru.dtos.StickerPlacement;
 import com.camagru.models.Image;
 import com.camagru.repositories.ImageRepository;
 import com.camagru.utils.FileUtil;
@@ -10,6 +11,7 @@ import com.camagru.utils.ValidationUtil;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.List;
 
 /**
  * Image service for image upload and processing.
@@ -22,23 +24,24 @@ public class ImageService {
     }
     
     /**
-     * Upload and process image with sticker.
+     * Upload and process image with multiple stickers.
      * 
      * @param userId User ID
      * @param base64Image Base64-encoded image data
-     * @param stickerIndex Sticker to apply (0-based)
+     * @param stickers List of sticker placements
      * @param useWebcam Whether image is from webcam
+     * @param caption Optional caption
      * @return Created image record
      */
-        public Image uploadImage(Integer userId, String base64Image, Integer stickerIndex, boolean useWebcam, String caption) 
+    public Image uploadImage(Integer userId, String base64Image, List<StickerPlacement> stickers, boolean useWebcam, String caption) 
             throws SQLException, IOException {
         
-        // Validate sticker index against available stickers
-        if (stickerIndex == null) {
-            throw new IllegalArgumentException("Sticker index is required");
+        // Validate stickers
+        if (stickers == null || stickers.isEmpty()) {
+            throw new IllegalArgumentException("At least one sticker is required");
         }
         
-        // Decode base64 image
+        // Decode base64 image (already contains merged stickers from frontend canvas)
         String imageData = base64Image;
         if (base64Image.contains(",")) {
             imageData = base64Image.split(",")[1];
@@ -56,14 +59,8 @@ public class ImageService {
             throw new IllegalArgumentException("Invalid image format. Only JPEG and PNG are allowed");
         }
         
-        // Get sticker path (dynamic from sticker directory)
-        String stickerPath = com.camagru.utils.StickerUtil.getStickerPathByIndex(stickerIndex);
-        if (stickerPath == null) {
-            throw new IllegalArgumentException("Invalid sticker index or sticker not found");
-        }
-        
-        // Merge image with sticker
-        byte[] mergedImageBytes = ImageUtil.mergeImages(imageBytes, stickerPath);
+        // Note: Sticker merging is done on the frontend canvas,
+        // so imageBytes already contains the final image with stickers
         
         // Sanitize caption
         String safeCaption = null;
@@ -77,13 +74,14 @@ public class ImageService {
         // Save merged image to filesystem
         String uploadDir = getUploadDirectory();
         String storedFilename = FileUtil.saveBase64Image(
-            Base64.getEncoder().encodeToString(mergedImageBytes), 
+            Base64.getEncoder().encodeToString(imageBytes), 
             uploadDir
         );
         
-        // Save image record to database
+        // Save image record to database (store first sticker index for backward compatibility)
         String originalFilename = useWebcam ? "webcam_capture.jpg" : "upload.jpg";
-        Image image = imageRepository.create(userId, originalFilename, storedFilename, safeCaption, stickerIndex);
+        int primaryStickerIndex = stickers.get(0).getStickerIndex();
+        Image image = imageRepository.create(userId, originalFilename, storedFilename, safeCaption, primaryStickerIndex);
         
         return image;
     }

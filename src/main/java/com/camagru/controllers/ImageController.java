@@ -1,6 +1,7 @@
 package com.camagru.controllers;
 
 import com.camagru.dtos.responses.ApiResponse;
+import com.camagru.dtos.StickerPlacement;
 import com.camagru.models.Image;
 import com.camagru.services.ImageService;
 import com.camagru.services.SessionService;
@@ -13,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,19 +67,59 @@ public class ImageController extends HttpServlet {
             Map<String, Object> body = JsonUtil.parseRequest(req);
             
             String imageData = (String) body.get("imageData");
-            Object stickerIndexObj = body.get("stickerIndex");
+            Object stickersObj = body.get("stickers");
             Boolean useWebcam = (Boolean) body.get("useWebcam");
             String caption = body.get("caption") != null ? body.get("caption").toString() : null;
             
-            if (imageData == null || stickerIndexObj == null) {
-                sendJsonResponse(resp, 400, ApiResponse.error("imageData and stickerIndex are required", "VALIDATION_ERROR"));
+            if (imageData == null || stickersObj == null) {
+                sendJsonResponse(resp, 400, ApiResponse.error("imageData and stickers are required", "VALIDATION_ERROR"));
                 return;
             }
             
-            Integer stickerIndex = stickerIndexObj instanceof Integer ? 
-                (Integer) stickerIndexObj : Integer.parseInt(stickerIndexObj.toString());
+            // Parse stickers array manually
+            List<StickerPlacement> stickers = new ArrayList<>();
+            if (stickersObj instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> stickerMaps = (List<Map<String, Object>>) stickersObj;
+                
+                for (Map<String, Object> stickerMap : stickerMaps) {
+                    StickerPlacement sticker = new StickerPlacement();
+                    
+                    Object indexObj = stickerMap.get("stickerIndex");
+                    if (indexObj instanceof Number) {
+                        sticker.setStickerIndex(((Number) indexObj).intValue());
+                    }
+                    
+                    Object xObj = stickerMap.get("x");
+                    if (xObj instanceof Number) {
+                        sticker.setX(((Number) xObj).doubleValue());
+                    }
+                    
+                    Object yObj = stickerMap.get("y");
+                    if (yObj instanceof Number) {
+                        sticker.setY(((Number) yObj).doubleValue());
+                    }
+                    
+                    Object widthObj = stickerMap.get("width");
+                    if (widthObj instanceof Number) {
+                        sticker.setWidth(((Number) widthObj).doubleValue());
+                    }
+                    
+                    Object heightObj = stickerMap.get("height");
+                    if (heightObj instanceof Number) {
+                        sticker.setHeight(((Number) heightObj).doubleValue());
+                    }
+                    
+                    stickers.add(sticker);
+                }
+            }
             
-            Image image = imageService.uploadImage(userId, imageData, stickerIndex, useWebcam != null && useWebcam, caption);
+            if (stickers.isEmpty()) {
+                sendJsonResponse(resp, 400, ApiResponse.error("At least one sticker is required", "VALIDATION_ERROR"));
+                return;
+            }
+            
+            Image image = imageService.uploadImage(userId, imageData, stickers, useWebcam != null && useWebcam, caption);
             
             sendJsonResponse(resp, 200, ApiResponse.success("Image uploaded successfully", 
                 Map.of("imageId", image.getId())));

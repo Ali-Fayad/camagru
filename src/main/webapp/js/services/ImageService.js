@@ -7,11 +7,12 @@ class ImageService {
         this.api = api;
     }
 
-    async uploadImage(imageData, stickerIndex, useWebcam = false) {
+    async uploadImage(imageData, stickerIndex, useWebcam = false, caption = null) {
         return this.api.post('/images/upload', {
             imageData,
             stickerIndex,
-            useWebcam
+            useWebcam,
+            caption
         });
     }
 

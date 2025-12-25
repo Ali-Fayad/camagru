@@ -51,9 +51,9 @@ class SettingsPage {
 
                                     <div>
                                         <label class="mb-2 block text-sm font-bold text-gray-700">Email Address</label>
-                                        <input type="email" name="email" value="${this.user?.email || ''}"
-                                            class="block w-full rounded-xl border-gray-300 focus:border-cam-olive focus:ring-cam-olive">
-                                        <p class="mt-1 text-xs text-gray-500">Changing email will require re-verification</p>
+                                        <input type="email" name="email" value="${this.user?.email || ''}" readonly
+                                            class="block w-full rounded-xl border-gray-200 bg-gray-50 text-gray-500 cursor-not-allowed">
+                                        <p class="mt-1 text-xs text-gray-500">Email cannot be changed</p>
                                     </div>
 
                                     <div id="account-message" class="hidden"></div>
@@ -203,9 +203,7 @@ class SettingsPage {
             if (formData.get('username') !== this.user?.username) {
                 data.username = formData.get('username');
             }
-            if (formData.get('email') !== this.user?.email) {
-                data.email = formData.get('email');
-            }
+            // Email is read-only, don't include it
 
             if (Object.keys(data).length === 0) {
                 this.showMessage(messageDiv, 'No changes to save', 'info');
@@ -224,12 +222,6 @@ class SettingsPage {
                 this.user = updatedUser;
 
                 this.showMessage(messageDiv, 'Profile updated successfully!', 'success');
-                
-                if (data.email) {
-                    setTimeout(() => {
-                        this.showMessage(messageDiv, 'Please check your email to verify your new address', 'info');
-                    }, 2000);
-                }
             } catch (error) {
                 this.showMessage(messageDiv, error.message || 'Failed to update profile', 'error');
             } finally {

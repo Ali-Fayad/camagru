@@ -1,7 +1,10 @@
 class UploadPage {
-    constructor(apiService) {
-        this.apiService = apiService;
+    constructor(imageService, stickerService, webcamService) {
+        this.imageService = imageService;
+        this.stickerService = stickerService;
+        this.webcamService = webcamService;
         this.stream = null;
+        this.selectedStickerIndex = 0; // Default to first sticker
     }
 
     async render() {
@@ -130,11 +133,7 @@ class UploadPage {
         this.setupWebcam();
         this.setupFileUpload();
         this.setupStickers();
-        
-        document.getElementById('publish-btn').addEventListener('click', () => {
-            alert('Post published! (Mock)');
-            window.location.hash = '#/';
-        });
+        this.setupPublish();
     }
 
     setupTabs() {
@@ -270,9 +269,75 @@ class UploadPage {
                 stickers.forEach(s => s.classList.remove('ring-2', 'ring-cam-olive'));
                 btn.classList.add('ring-2', 'ring-cam-olive');
                 
-                // Logic to add sticker to canvas would go here
-                console.log('Selected sticker:', btn.dataset.sticker);
+                // Store selected sticker index
+                this.selectedStickerIndex = parseInt(btn.dataset.sticker);
+                console.log('Selected sticker:', this.selectedStickerIndex);
             });
+        });
+        
+        // Default to first sticker
+        if (stickers.length > 0) {
+            stickers[0].click();
+        }
+    }
+    
+    async setupPublish() {
+        const publishBtn = document.getElementById('publish-btn');
+        const messageInput = document.getElementById('post-message');
+        
+        publishBtn.addEventListener('click', async () => {
+            try {
+                // Get caption
+                const caption = messageInput.value.trim();
+                
+                // Get image data
+                let imageData = null;
+                let useWebcam = false;
+                
+                // Check webcam canvas first
+                const webcamCanvas = document.getElementById('webcam-canvas');
+                if (webcamCanvas && !webcamCanvas.classList.contains('hidden')) {
+                    imageData = webcamCanvas.toDataURL('image/jpeg', 0.9);
+                    useWebcam = true;
+                } else {
+                    // Check upload preview
+                    const previewImg = document.getElementById('preview-image');
+                    if (previewImg && previewImg.src && !document.getElementById('upload-preview').classList.contains('hidden')) {
+                        imageData = previewImg.src;
+                        useWebcam = false;
+                    }
+                }
+                
+                if (!imageData) {
+                    alert('Please capture or upload an image first!');
+                    return;
+                }
+                
+                if (this.selectedStickerIndex === undefined) {
+                    alert('Please select a sticker!');
+                    return;
+                }
+                
+                // Disable button during upload
+                publishBtn.disabled = true;
+                publishBtn.textContent = 'Publishing...';
+                
+                // Upload image using ImageService
+                const response = await this.imageService.uploadImage(imageData, this.selectedStickerIndex, useWebcam, caption);
+                
+                if (response.success) {
+                    alert('Post published successfully!');
+                    window.location.hash = '#/gallery';
+                } else {
+                    throw new Error(response.message || 'Upload failed');
+                }
+                
+            } catch (error) {
+                console.error('Upload error:', error);
+                alert('Failed to publish post: ' + (error.message || 'Unknown error'));
+                publishBtn.disabled = false;
+                publishBtn.textContent = 'Publish Post';
+            }
         });
     }
 }

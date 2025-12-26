@@ -20,7 +20,7 @@ class ApiService {
         // Add CSRF token if available
         const csrfToken = this.storage.getCsrfToken();
         if (csrfToken) {
-            headers['X-CSRF-TOKEN'] = csrfToken;
+            headers['X-CSRF-Token'] = csrfToken;
         }
 
         const config = {

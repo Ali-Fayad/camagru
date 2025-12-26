@@ -71,15 +71,15 @@ class Storage {
     }
 
     setCsrfToken(token) {
-        // Store CSRF token in sessionStorage (cleared when tab closes) or memory
-        // For this implementation, we'll use the main storage mechanism but prefer sessionStorage if we were splitting
-        // But requirement says "Single Storage.js".
-        // We'll just use the set method.
         this.set('csrf_token', token);
     }
 
     getCsrfToken() {
         return this.get('csrf_token');
+    }
+
+    clearCsrfToken() {
+        this.remove('csrf_token');
     }
 
     clearAuth() {

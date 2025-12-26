@@ -565,14 +565,29 @@ class UploadPage {
                 // Get caption
                 const caption = messageInput.value.trim();
                 
-                // Get image data from active canvas
+                // Get active canvas
                 const canvas = this.getActiveCanvas();
                 if (!canvas) {
                     alert('Please capture or upload an image first!');
                     return;
                 }
                 
-                const imageData = canvas.toDataURL('image/jpeg', 0.9);
+                // CRITICAL: Send RAW base image, NOT the canvas with stickers merged
+                // The server must do the merging (subject requirement: "whole processing on server-side")
+                const baseImage = canvas.baseImage;
+                if (!baseImage) {
+                    alert('No base image available!');
+                    return;
+                }
+                
+                // Create temporary canvas to get raw image data
+                const tempCanvas = document.createElement('canvas');
+                tempCanvas.width = baseImage.width || baseImage.videoWidth || canvas.width;
+                tempCanvas.height = baseImage.height || baseImage.videoHeight || canvas.height;
+                const ctx = tempCanvas.getContext('2d');
+                ctx.drawImage(baseImage, 0, 0);
+                
+                const rawImageData = tempCanvas.toDataURL('image/jpeg', 0.9);
                 const useWebcam = canvas.id === 'webcam-canvas';
                 
                 // Prepare sticker data (convert to relative positions 0-1)
@@ -588,8 +603,8 @@ class UploadPage {
                 publishBtn.disabled = true;
                 publishBtn.textContent = 'Publishing...';
                 
-                // Upload image using ImageService with stickers array
-                const response = await this.imageService.uploadImage(imageData, stickers, useWebcam, caption);
+                // Upload RAW image + sticker metadata (server will merge)
+                const response = await this.imageService.uploadImage(rawImageData, stickers, useWebcam, caption);
                 
                 if (response.success) {
                     alert('Post published successfully!');

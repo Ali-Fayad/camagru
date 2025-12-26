@@ -74,6 +74,7 @@ CREATE INDEX idx_comments_created_at ON comments(created_at DESC);
 CREATE TABLE sessions (
     id VARCHAR(128) PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    csrf_token VARCHAR(64),
     data TEXT,
     last_accessed TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

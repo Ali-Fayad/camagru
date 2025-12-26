@@ -76,17 +76,27 @@ public class AuthService {
         if (userRepository.verifyUser(email, code)) {
             User user = userRepository.findByEmail(email);
             String sessionId = generateSessionId(user.getId());
-            return sessionRepository.create(sessionId, user.getId());
+            String csrfToken = generateCsrfToken();
+            return sessionRepository.create(sessionId, user.getId(), csrfToken);
         }
         return null;
     }
 
     /**
      * Login user and create session.
-     * Subject requirement: Login with username and password.
+     * Accepts either username or email as identifier.
      */
-    public Session login(String username, String password) throws SQLException {
-        User user = userRepository.findByUsername(username);
+    public Session login(String identifier, String password) throws SQLException {
+        // Try to find user by email first, then by username
+        User user = null;
+        if (ValidationUtil.isValidEmail(identifier)) {
+            user = userRepository.findByEmail(identifier);
+        }
+        
+        // If not found by email, try username
+        if (user == null) {
+            user = userRepository.findByUsername(identifier);
+        }
         
         if (user == null) {
             throw new IllegalArgumentException("Invalid credentials");
@@ -100,11 +110,12 @@ public class AuthService {
             throw new IllegalArgumentException("Invalid credentials");
         }
         
-        // Generate session ID
+        // Generate session ID and CSRF token
         String sessionId = generateSessionId(user.getId());
+        String csrfToken = generateCsrfToken();
         
         // Create session in database
-        Session session = sessionRepository.create(sessionId, user.getId());
+        Session session = sessionRepository.create(sessionId, user.getId(), csrfToken);
         
         return session;
     }
@@ -189,6 +200,22 @@ public class AuthService {
      * PHP equivalent: bin2hex(random_bytes(32))
      */
     private String generateResetToken() {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[32];
+        random.nextBytes(bytes);
+        StringBuilder hexString = new StringBuilder();
+        for (byte b : bytes) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) hexString.append('0');
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+    
+    /**
+     * Generate secure CSRF token.
+     */
+    private String generateCsrfToken() {
         SecureRandom random = new SecureRandom();
         byte[] bytes = new byte[32];
         random.nextBytes(bytes);

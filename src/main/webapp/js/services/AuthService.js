@@ -8,9 +8,13 @@ class AuthService {
         this.storage = storage;
     }
 
-    async login(email, password) {
-        const response = await this.api.post('/login', { email, password });
+    async login(identifier, password) {
+        const response = await this.api.post('/login', { email: identifier, password });
         if (response.data && response.data.sessionId) {
+            // Store CSRF token for future requests
+            if (response.data.csrfToken) {
+                this.storage.setCsrfToken(response.data.csrfToken);
+            }
             // Session is handled by cookie, but we might store user info
             // We need to fetch user profile after login if not returned
             await this.fetchCurrentUser();
@@ -25,6 +29,10 @@ class AuthService {
     async verify(email, code) {
         const response = await this.api.post('/verify', { email, code });
         if (response.data && response.data.sessionId) {
+            // Store CSRF token for future requests
+            if (response.data.csrfToken) {
+                this.storage.setCsrfToken(response.data.csrfToken);
+            }
             await this.fetchCurrentUser();
         }
         return response;
@@ -33,8 +41,10 @@ class AuthService {
     async logout() {
         try {
             await this.api.post('/logout');
-        } catch (e) {
-            // Ignore error on logout
+            this.storage.clearCsrfToken();
+        } catch (e)
+        {
+            //ignore errors on logout
         } finally {
             this.storage.clearAuth();
             window.location.hash = '#/login';

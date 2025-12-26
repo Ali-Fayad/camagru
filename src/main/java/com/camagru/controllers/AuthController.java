@@ -98,7 +98,7 @@ public class AuthController extends HttpServlet {
             resp.addCookie(sessionCookie);
 
             sendJsonResponse(resp, 200, ApiResponse.success("Email verified successfully!", 
-                Map.of("sessionId", session.getId())));
+                Map.of("sessionId", session.getId(), "csrfToken", session.getCsrfToken())));
         } else {
             sendJsonResponse(resp, 400, ApiResponse.error("Invalid or expired verification code", "INVALID_VERIFICATION"));
         }
@@ -107,11 +107,15 @@ public class AuthController extends HttpServlet {
     private void handleLogin(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Map<String, Object> body = JsonUtil.parseRequest(req);
         
-        String username = (String) body.get("username");
+        // Accept both 'email' and 'username' fields for backwards compatibility
+        String identifier = (String) body.get("email");
+        if (identifier == null) {
+            identifier = (String) body.get("username");
+        }
         String password = (String) body.get("password");
         
         try {
-            Session session = authService.login(username, password);
+            Session session = authService.login(identifier, password);
             
             // Set session cookie (expires on browser close for security)
             Cookie sessionCookie = new Cookie("CAMAGRU_SESSION", session.getId());
@@ -121,7 +125,7 @@ public class AuthController extends HttpServlet {
             resp.addCookie(sessionCookie);
             
             sendJsonResponse(resp, 200, ApiResponse.success("Login successful", 
-                Map.of("sessionId", session.getId())));
+                Map.of("sessionId", session.getId(), "csrfToken", session.getCsrfToken())));
         } catch (IllegalArgumentException e) {
             if ("Email not verified".equals(e.getMessage())) {
                 sendJsonResponse(resp, 201, ApiResponse.success("Email not verified. Please verify your account.", 

@@ -46,6 +46,7 @@ com/camagru/dtos/responses/UserResponse.class
 com/camagru/controllers/GalleryController.class
 com/camagru/dtos/responses/ImageResponse.class
 com/camagru/models/User.class
+com/camagru/filters/CsrfFilter.class
 com/camagru/controllers/UploadServlet.class
 com/camagru/services/StickerService.class
 com/camagru/services/NotificationService.class

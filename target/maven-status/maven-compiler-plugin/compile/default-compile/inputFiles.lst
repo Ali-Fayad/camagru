@@ -32,6 +32,7 @@
 /home/afayad/java-web-app/src/main/java/com/camagru/services/UserService.java
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/UploadServlet.java
 /home/afayad/java-web-app/src/main/java/com/camagru/config/DatabaseConfig.java
+/home/afayad/java-web-app/src/main/java/com/camagru/filters/CsrfFilter.java
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/ImageController.java
 /home/afayad/java-web-app/src/main/java/com/camagru/dtos/responses/ApiResponse.java
 /home/afayad/java-web-app/src/main/java/com/camagru/controllers/UserImagesController.java

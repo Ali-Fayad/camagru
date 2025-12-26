@@ -12,22 +12,24 @@ import java.sql.*;
 public class SessionRepository {
     
     /**
-     * Create new session.
+     * Create new session with CSRF token.
      */
-    public Session create(String sessionId, Integer userId) throws SQLException {
-        String sql = "INSERT INTO sessions (id, user_id) VALUES (?, ?) RETURNING created_at, last_accessed";
+    public Session create(String sessionId, Integer userId, String csrfToken) throws SQLException {
+        String sql = "INSERT INTO sessions (id, user_id, csrf_token) VALUES (?, ?, ?) RETURNING created_at, last_accessed";
         
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, sessionId);
             stmt.setInt(2, userId);
+            stmt.setString(3, csrfToken);
             
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
                     Session session = new Session();
                     session.setId(sessionId);
                     session.setUserId(userId);
+                    session.setCsrfToken(csrfToken);
                     session.setCreatedAt(rs.getTimestamp("created_at"));
                     session.setLastAccessed(rs.getTimestamp("last_accessed"));
                     return session;
@@ -55,6 +57,7 @@ public class SessionRepository {
                     session.setId(rs.getString("id"));
                     session.setUserId(rs.getInt("user_id"));
                     session.setData(rs.getString("data"));
+                    session.setCsrfToken(rs.getString("csrf_token"));
                     session.setLastAccessed(rs.getTimestamp("last_accessed"));
                     session.setCreatedAt(rs.getTimestamp("created_at"));
                     return session;

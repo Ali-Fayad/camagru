@@ -25,9 +25,10 @@ public class ImageService {
     
     /**
      * Upload and process image with multiple stickers.
+     * Subject requirement: "The whole processing must happen on the server-side."
      * 
      * @param userId User ID
-     * @param base64Image Base64-encoded image data
+     * @param base64Image Base64-encoded raw image data (no stickers merged yet)
      * @param stickers List of sticker placements
      * @param useWebcam Whether image is from webcam
      * @param caption Optional caption
@@ -41,7 +42,7 @@ public class ImageService {
             throw new IllegalArgumentException("At least one sticker is required");
         }
         
-        // Decode base64 image (already contains merged stickers from frontend canvas)
+        // Decode base64 image (raw image without stickers)
         String imageData = base64Image;
         if (base64Image.contains(",")) {
             imageData = base64Image.split(",")[1];
@@ -59,8 +60,9 @@ public class ImageService {
             throw new IllegalArgumentException("Invalid image format. Only JPEG and PNG are allowed");
         }
         
-        // Note: Sticker merging is done on the frontend canvas,
-        // so imageBytes already contains the final image with stickers
+        // SERVER-SIDE IMAGE PROCESSING:
+        // Merge stickers onto the base image using Java2D/ImageIO
+        byte[] mergedImageBytes = ImageUtil.mergeImagesWithStickers(imageBytes, stickers);
         
         // Sanitize caption
         String safeCaption = null;
@@ -74,7 +76,7 @@ public class ImageService {
         // Save merged image to filesystem
         String uploadDir = getUploadDirectory();
         String storedFilename = FileUtil.saveBase64Image(
-            Base64.getEncoder().encodeToString(imageBytes), 
+            Base64.getEncoder().encodeToString(mergedImageBytes), 
             uploadDir
         );
         

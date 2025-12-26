@@ -187,9 +187,11 @@ public class AuthController extends HttpServlet {
     }
     
     private void sendJsonResponse(HttpServletResponse resp, int status, ApiResponse response) throws IOException {
-        resp.setStatus(status);
+        // Set headers BEFORE writing any content to prevent chunked encoding issues
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(status);
         resp.getWriter().write(JsonUtil.toJson(response));
+        resp.getWriter().flush();
     }
 }

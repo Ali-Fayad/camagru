@@ -197,7 +197,7 @@ class PostPage {
             
             if (this.post.isLikedByCurrentUser) {
                 // Unlike
-                await this.api.delete(`/posts/${this.postId}/like`);
+                await this.api.delete(`/likes/${this.postId}`);
                 this.post.isLikedByCurrentUser = false;
                 this.post.likesCount--;
                 likeBtn.classList.remove('text-red-500');
@@ -205,7 +205,7 @@ class PostPage {
                 heartIcon.classList.remove('filled');
             } else {
                 // Like
-                await this.api.post(`/posts/${this.postId}/like`, {});
+                await this.api.post(`/likes/${this.postId}`, {});
                 this.post.isLikedByCurrentUser = true;
                 this.post.likesCount++;
                 likeBtn.classList.remove('text-gray-600', 'hover:text-red-500');
@@ -244,7 +244,7 @@ class PostPage {
             commentBtn.disabled = true;
             commentBtn.textContent = 'Posting...';
             
-            const response = await this.api.post(`/posts/${this.postId}/comments`, { content });
+            const response = await this.api.post(`/comments/${this.postId}`, { content });
             const newComment = response.data;
             
             // Add comment to list

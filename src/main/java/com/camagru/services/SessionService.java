@@ -17,13 +17,23 @@ public class SessionService {
     
     /**
      * Get session by ID and update last accessed.
+     * Returns null only if session truly doesn't exist or is invalid.
      */
     public Session getSession(String sessionId) throws SQLException {
+        if (sessionId == null || sessionId.trim().isEmpty()) {
+            return null;
+        }
+        
         Session session = sessionRepository.findById(sessionId);
         
         if (session != null) {
-            // Update last accessed timestamp
-            sessionRepository.updateLastAccessed(sessionId);
+            try {
+                // Update last accessed timestamp
+                sessionRepository.updateLastAccessed(sessionId);
+            } catch (SQLException e) {
+                // Log but don't fail if update fails - session is still valid
+                System.err.println("Warning: Failed to update session last_accessed: " + e.getMessage());
+            }
         }
         
         return session;

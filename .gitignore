@@ -41,3 +41,6 @@ stickers_data/
 
 # JavaMail debug output (if added)
 mail.debug
+
+# the subject
+camagru.pdf

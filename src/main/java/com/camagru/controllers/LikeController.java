@@ -20,10 +20,10 @@ import java.sql.SQLException;
 
 /**
  * Like controller - handles liking/unliking posts
- * POST /api/posts/:id/like - Like a post
- * DELETE /api/posts/:id/like - Unlike a post
+ * POST /api/likes/:id - Like a post
+ * DELETE /api/likes/:id - Unlike a post
  */
-@WebServlet(urlPatterns = {"/api/posts/*/like"})
+@WebServlet(urlPatterns = {"/api/likes/*"})
 public class LikeController extends HttpServlet {
     
     private final LikeRepository likeRepository = new LikeRepository();
@@ -146,16 +146,13 @@ public class LikeController extends HttpServlet {
     }
     
     private Integer extractPostId(HttpServletRequest req) {
-        String pathInfo = req.getServletPath(); // /api/posts/123/like
-        String[] parts = pathInfo.split("/");
-        if (parts.length >= 4) {
-            try {
-                return Integer.parseInt(parts[3]);
-            } catch (NumberFormatException e) {
-                return null;
-            }
+        String pathInfo = req.getPathInfo(); // /{id}
+        if (pathInfo == null || pathInfo.length() <= 1) return null;
+        try {
+            return Integer.parseInt(pathInfo.substring(1));
+        } catch (NumberFormatException e) {
+            return null;
         }
-        return null;
     }
     
     private Integer getCurrentUserId(HttpServletRequest req) throws SQLException {
@@ -179,9 +176,11 @@ public class LikeController extends HttpServlet {
     }
     
     private void sendJsonResponse(HttpServletResponse resp, int status, ApiResponse response) throws IOException {
-        resp.setStatus(status);
+        // Set headers BEFORE writing any content to prevent chunked encoding issues
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
+        resp.setStatus(status);
         resp.getWriter().write(JsonUtil.toJson(response));
+        resp.getWriter().flush();
     }
 }

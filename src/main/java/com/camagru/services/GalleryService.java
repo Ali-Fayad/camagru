@@ -93,7 +93,7 @@ public class GalleryService {
         }
         
         // Build image URL
-        response.setImageUrl(AppConfig.UPLOAD_DIR + "/" + image.getStoredFilename());
+        response.setImageUrl("/uploads/" + image.getStoredFilename());
         
         // Get like count
         int likeCount = likeRepository.getLikeCount(image.getId());

@@ -98,14 +98,14 @@ class ImageCard {
                 count.textContent = Math.max(0, currentCount - 1);
                 this.image.isLikedByCurrentUser = false;
                 this.image.userLiked = false;
-                await this.options.apiService.delete(`/posts/${imageId}/like`);
+                await this.options.apiService.delete(`/likes/${imageId}`);
             } else {
                 // Like
                 icon.classList.add('fill-current', 'text-red-500');
                 count.textContent = currentCount + 1;
                 this.image.isLikedByCurrentUser = true;
                 this.image.userLiked = true;
-                await this.options.apiService.post(`/posts/${imageId}/like`);
+                await this.options.apiService.post(`/likes/${imageId}`, {});
             }
 
             // Call custom callback if provided
@@ -114,8 +114,14 @@ class ImageCard {
             }
         } catch (error) {
             console.error('Failed to toggle like:', error);
-            // Revert UI on error
-            window.location.reload();
+            // Revert UI on error by reloading the count from server
+            // Don't reload entire page - just log the error
+            const icon = button.querySelector('.material-symbols-outlined');
+            const count = button.querySelector('.like-count');
+            icon.classList.remove('fill-current', 'text-red-500');
+            if (this.image.likesCount !== undefined) {
+                count.textContent = this.image.likesCount || this.image.likeCount || 0;
+            }
         }
     }
 

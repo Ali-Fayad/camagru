@@ -53,10 +53,7 @@ public class UploadServlet extends HttpServlet {
         }
         
         // Set content type based on file extension
-        String contentType = getServletContext().getMimeType(filename);
-        if (contentType == null) {
-            contentType = "application/octet-stream";
-        }
+        String contentType = getContentTypeFromFilename(filename);
         resp.setContentType(contentType);
         
         // Set cache headers for images
@@ -64,5 +61,29 @@ public class UploadServlet extends HttpServlet {
         
         // Stream file to response
         Files.copy(filePath, resp.getOutputStream());
+    }
+    
+    /**
+     * Get content type from filename extension.
+     * Explicitly handles common image formats to avoid null MIME types.
+     */
+    private String getContentTypeFromFilename(String filename) {
+        String lower = filename.toLowerCase();
+        
+        if (lower.endsWith(".png")) {
+            return "image/png";
+        } else if (lower.endsWith(".jpg") || lower.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (lower.endsWith(".gif")) {
+            return "image/gif";
+        } else if (lower.endsWith(".webp")) {
+            return "image/webp";
+        } else if (lower.endsWith(".svg")) {
+            return "image/svg+xml";
+        }
+        
+        // Fallback to servlet context MIME type lookup
+        String contextType = getServletContext().getMimeType(filename);
+        return contextType != null ? contextType : "application/octet-stream";
     }
 }

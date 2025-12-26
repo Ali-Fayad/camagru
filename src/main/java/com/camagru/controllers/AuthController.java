@@ -90,11 +90,11 @@ public class AuthController extends HttpServlet {
         Session session = authService.verifyAndLogin(email, code);
         
         if (session != null) {
-            // Set session cookie
+            // Set session cookie (expires on browser close for security)
             Cookie sessionCookie = new Cookie("CAMAGRU_SESSION", session.getId());
             sessionCookie.setHttpOnly(true);
             sessionCookie.setPath("/");
-            sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+            sessionCookie.setMaxAge(-1); // Session cookie - expires on browser close
             resp.addCookie(sessionCookie);
 
             sendJsonResponse(resp, 200, ApiResponse.success("Email verified successfully!", 
@@ -107,17 +107,17 @@ public class AuthController extends HttpServlet {
     private void handleLogin(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         Map<String, Object> body = JsonUtil.parseRequest(req);
         
-        String email = (String) body.get("email");
+        String username = (String) body.get("username");
         String password = (String) body.get("password");
         
         try {
-            Session session = authService.login(email, password);
+            Session session = authService.login(username, password);
             
-            // Set session cookie
+            // Set session cookie (expires on browser close for security)
             Cookie sessionCookie = new Cookie("CAMAGRU_SESSION", session.getId());
             sessionCookie.setHttpOnly(true);
             sessionCookie.setPath("/");
-            sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+            sessionCookie.setMaxAge(-1); // Session cookie - expires on browser close
             resp.addCookie(sessionCookie);
             
             sendJsonResponse(resp, 200, ApiResponse.success("Login successful", 

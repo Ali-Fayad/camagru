@@ -58,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await authService.logout();
             window.location.hash = '#/login';
         } catch (error) {
-            console.error('Logout error:', error);
             // Force logout even if API fails
             storage.clearAuth();
             window.location.hash = '#/login';

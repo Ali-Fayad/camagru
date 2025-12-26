@@ -6,7 +6,7 @@ import com.camagru.models.User;
 import com.camagru.repositories.ImageRepository;
 import com.camagru.repositories.LikeRepository;
 import com.camagru.repositories.UserRepository;
-import com.camagru.services.NotificationService;
+import com.camagru.services.EmailService;
 import com.camagru.services.SessionService;
 import com.camagru.utils.JsonUtil;
 import jakarta.servlet.ServletException;
@@ -30,7 +30,7 @@ public class LikeController extends HttpServlet {
     private final ImageRepository imageRepository = new ImageRepository();
     private final UserRepository userRepository = new UserRepository();
     private final SessionService sessionService = new SessionService();
-    private final NotificationService notificationService = new NotificationService();
+    private final EmailService emailService = new EmailService();
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
@@ -39,7 +39,6 @@ public class LikeController extends HttpServlet {
         try {
             handleLike(req, resp);
         } catch (Exception e) {
-            e.printStackTrace();
             sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "SERVER_ERROR"));
         }
     }
@@ -51,7 +50,6 @@ public class LikeController extends HttpServlet {
         try {
             handleUnlike(req, resp);
         } catch (Exception e) {
-            e.printStackTrace();
             sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "SERVER_ERROR"));
         }
     }
@@ -94,13 +92,14 @@ public class LikeController extends HttpServlet {
                 User liker = userRepository.findById(userId);
                 
                 if (postAuthor.isReceiveNotifications()) {
-                    String subject = "New Like on Your Post";
-                    String message = liker.getUsername() + " liked your post!";
-                    notificationService.sendEmail(postAuthor.getEmail(), subject, message);
+                    emailService.sendLikeNotification(
+                        postAuthor.getEmail(),
+                        postAuthor.getUsername(),
+                        liker.getUsername()
+                    );
                 }
             } catch (Exception e) {
-                // Log but don't fail the like operation
-                System.err.println("Failed to send notification: " + e.getMessage());
+                // Silently continue if notification fails - don't fail the like operation
             }
         }
         

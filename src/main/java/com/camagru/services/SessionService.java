@@ -1,9 +1,11 @@
 package com.camagru.services;
 
+import com.camagru.config.AppConfig;
 import com.camagru.models.Session;
 import com.camagru.repositories.SessionRepository;
 
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 /**
  * Session service for managing user sessions.
@@ -17,7 +19,7 @@ public class SessionService {
     
     /**
      * Get session by ID and update last accessed.
-     * Returns null only if session truly doesn't exist or is invalid.
+     * Returns null if session doesn't exist or has expired.
      */
     public Session getSession(String sessionId) throws SQLException {
         if (sessionId == null || sessionId.trim().isEmpty()) {
@@ -26,15 +28,24 @@ public class SessionService {
         
         Session session = sessionRepository.findById(sessionId);
         
-        if (session != null) {
-            try {
-                // Update last accessed timestamp
-                sessionRepository.updateLastAccessed(sessionId);
-            } catch (SQLException e) {
-                // Log but don't fail if update fails - session is still valid
-                System.err.println("Warning: Failed to update session last_accessed: " + e.getMessage());
-            }
+        if (session == null) {
+            return null;
         }
+        
+        // Check if session has expired based on last accessed time
+        long currentTime = System.currentTimeMillis();
+        long lastAccessedTime = session.getLastAccessed().getTime();
+        long idleTime = currentTime - lastAccessedTime;
+        long timeoutMillis = AppConfig.SESSION_TIMEOUT * 1000L;
+        
+        if (idleTime > timeoutMillis) {
+            // Session expired - delete it
+            sessionRepository.delete(sessionId);
+            return null;
+        }
+        
+        // Update last accessed timestamp for valid session
+        sessionRepository.updateLastAccessed(sessionId);
         
         return session;
     }

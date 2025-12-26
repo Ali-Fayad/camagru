@@ -43,7 +43,6 @@ public class PostController extends HttpServlet {
         try {
             handleGetPost(req, resp);
         } catch (Exception e) {
-            e.printStackTrace();
             sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "SERVER_ERROR"));
         }
     }

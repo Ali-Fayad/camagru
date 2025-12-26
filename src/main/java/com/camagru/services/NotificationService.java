@@ -1,22 +1,19 @@
 package com.camagru.services;
 
 /**
- * Notification service for sending email notifications
- * TODO: Implement actual SMTP email sending
+ * Notification service for sending email notifications.
+ * This is a stub - production should use EmailService.
+ * TODO: Replace with EmailService throughout the application.
  */
 public class NotificationService {
     
     /**
-     * Send plain text email notification
-     * Currently logs to console - implement SMTP later
+     * Send plain text email notification.
+     * Currently a stub that does nothing.
+     * Production implementations should use EmailService instead.
      */
     public void sendEmail(String to, String subject, String message) {
-        // TODO: Implement actual email sending with JavaMail API
-        // For now, just log it
-        System.out.println("=== EMAIL NOTIFICATION ===");
-        System.out.println("To: " + to);
-        System.out.println("Subject: " + subject);
-        System.out.println("Message: " + message);
-        System.out.println("==========================");
+        // Stub - does not send emails
+        // In production, replace calls to this with EmailService
     }
 }

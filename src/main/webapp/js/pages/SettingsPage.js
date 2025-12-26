@@ -290,7 +290,6 @@ class SettingsPage {
             try {
                 await this.userService.toggleNotifications(enabled);
             } catch (error) {
-                console.error('Failed to update notifications:', error);
                 // Revert toggle on error
                 e.target.checked = !enabled;
             }

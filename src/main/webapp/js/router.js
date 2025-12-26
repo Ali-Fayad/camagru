@@ -52,7 +52,6 @@ class Router {
         
         // 404 handling
         if (!route) {
-            console.warn('Route not found:', path);
             // Try to find a 404 route or redirect home
             route = this.routes.find(r => r.path === '/404');
             if (!route) {
@@ -140,7 +139,6 @@ class Router {
             this.currentPage = page;
 
         } catch (error) {
-            console.error('Render error:', error);
             this.appContainer.innerHTML = '<div class="p-4 text-red-500">Error loading page</div>';
         }
     }

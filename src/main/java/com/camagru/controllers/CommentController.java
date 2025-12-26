@@ -7,7 +7,7 @@ import com.camagru.models.User;
 import com.camagru.repositories.CommentRepository;
 import com.camagru.repositories.ImageRepository;
 import com.camagru.repositories.UserRepository;
-import com.camagru.services.NotificationService;
+import com.camagru.services.EmailService;
 import com.camagru.services.SessionService;
 import com.camagru.utils.JsonUtil;
 import com.camagru.utils.ValidationUtil;
@@ -33,7 +33,7 @@ public class CommentController extends HttpServlet {
     private final ImageRepository imageRepository = new ImageRepository();
     private final UserRepository userRepository = new UserRepository();
     private final SessionService sessionService = new SessionService();
-    private final NotificationService notificationService = new NotificationService();
+    private final EmailService emailService = new EmailService();
     
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) 
@@ -42,7 +42,6 @@ public class CommentController extends HttpServlet {
         try {
             handleAddComment(req, resp);
         } catch (Exception e) {
-            e.printStackTrace();
             sendJsonResponse(resp, 500, ApiResponse.error(e.getMessage(), "SERVER_ERROR"));
         }
     }
@@ -95,13 +94,15 @@ public class CommentController extends HttpServlet {
                 User commenter = userRepository.findById(userId);
                 
                 if (postAuthor.isReceiveNotifications()) {
-                    String subject = "New Comment on Your Post";
-                    String message = commenter.getUsername() + " commented: \"" + content + "\"";
-                    notificationService.sendEmail(postAuthor.getEmail(), subject, message);
+                    emailService.sendCommentNotification(
+                        postAuthor.getEmail(),
+                        postAuthor.getUsername(),
+                        commenter.getUsername(),
+                        content
+                    );
                 }
             } catch (Exception e) {
-                // Log but don't fail the comment operation
-                System.err.println("Failed to send notification: " + e.getMessage());
+                // Silently continue if notification fails - don't fail the comment operation
             }
         }
         

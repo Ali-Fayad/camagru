@@ -30,8 +30,9 @@
 Thumbs.db
 
 # Environment files (do not commit credentials)
-# .env
-# .env.*
+.env
+.env.*
+!.env.example
 
 # Uploads / runtime data
 /uploads/

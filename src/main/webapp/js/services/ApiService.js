@@ -55,13 +55,6 @@ class ApiService {
                     enumerable: false
                 });
             }
-
-            // DEBUG: print API status and endpoint to the console for troubleshooting
-            try {
-                console.log(`[API] ${config.method ? config.method.toUpperCase() : 'GET'} ${url} -> ${response.status}`, data);
-            } catch (e) {
-                // ignore logging errors
-            }
             
             // Status 201 is special - it means success but requires verification
             if (response.status === 201) {
@@ -74,9 +67,6 @@ class ApiService {
 
             return data;
         } catch (error) {
-            // Don't log to console in production (per requirements), but we are in dev.
-            // Requirement: "No console errors/warnings in production"
-            // We'll rethrow for the caller to handle UI feedback
             throw error;
         }
     }

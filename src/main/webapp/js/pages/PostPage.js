@@ -124,7 +124,6 @@ class PostPage {
             this.setupEventListeners(isAuthenticated);
             
         } catch (error) {
-            console.error('Failed to load post:', error);
             contentDiv.innerHTML = `
                 <div class="p-12 text-center">
                     <span class="material-symbols-outlined text-6xl text-gray-300 mb-4">error</span>
@@ -217,7 +216,6 @@ class PostPage {
             likeBtn.disabled = false;
             
         } catch (error) {
-            console.error('Failed to toggle like:', error);
             if (error.message.includes('Authentication')) {
                 alert('Please log in to like posts');
                 window.location.hash = '#/login';
@@ -261,7 +259,6 @@ class PostPage {
             commentBtn.textContent = 'Post';
             
         } catch (error) {
-            console.error('Failed to add comment:', error);
             if (error.message.includes('Authentication')) {
                 alert('Please log in to comment');
                 window.location.hash = '#/login';

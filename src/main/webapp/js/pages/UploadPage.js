@@ -4,7 +4,8 @@ class UploadPage {
         this.stickerService = stickerService;
         this.webcamService = webcamService;
         this.stream = null;
-        this.selectedStickerIndex = 0; // Default to first sticker
+        this.selectedStickerIndex = 0;
+        this.placedStickers = []; // Track placed stickers
     }
 
     async render() {
@@ -69,7 +70,7 @@ class UploadPage {
                                 <div class="mt-4 flex justify-center gap-4">
                                     <button id="start-camera" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-bold hover:bg-gray-300 transition-colors">
                                         Start Camera
-                                    </button>
+                                    </button>disabled group flex h-14 w-14 items-center justify-center rounded-full bg-red-500 text-white shadow-lg hover:bg-red-600 hover:shadow-red-500/30 transition-all duration-200 hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" disabled
                                     <button id="capture-btn" class="hidden group flex h-14 w-14 items-center justify-center rounded-full bg-red-500 text-white shadow-lg hover:bg-red-600 hover:shadow-red-500/30 transition-all duration-200 hover:scale-105 active:scale-95">
                                         <span class="material-symbols-outlined text-3xl">camera</span>
                                     </button>
@@ -200,7 +201,6 @@ class UploadPage {
                 startBtn.classList.add('hidden');
                 captureBtn.classList.remove('hidden');
             } catch (err) {
-                console.error("Error accessing webcam:", err);
                 alert("Could not access webcam. Please allow camera access.");
             }
         });
@@ -216,6 +216,7 @@ class UploadPage {
             
             // Clear placed stickers when capturing new image
             this.placedStickers = [];
+            this.updateCaptureButtonState();
             
             video.classList.add('hidden');
             canvas.classList.remove('hidden');
@@ -288,6 +289,7 @@ class UploadPage {
                         
                         // Clear placed stickers when uploading new image
                         this.placedStickers = [];
+                        this.updateCaptureButtonState();
                         
                         previewImg.classList.add('hidden');
                         canvas.classList.remove('hidden');
@@ -345,6 +347,21 @@ class UploadPage {
         
         this.placedStickers.push(placedSticker);
         this.renderCanvas();
+        this.updateCaptureButtonState();
+    }
+    
+    updateCaptureButtonState() {
+        const captureBtn = document.getElementById('capture-btn');
+        if (!captureBtn) return;
+        
+        // Capture button should only be enabled if at least one sticker is placed
+        if (this.placedStickers.length > 0) {
+            captureBtn.disabled = false;
+            captureBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        } else {
+            captureBtn.disabled = true;
+            captureBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
     }
     
     getActiveCanvas() {
@@ -457,6 +474,7 @@ class UploadPage {
                 if (isInDeleteButton(pos, sticker)) {
                     this.placedStickers.splice(i, 1);
                     this.renderCanvas();
+                    this.updateCaptureButtonState();
                     return;
                 }
                 
@@ -581,7 +599,6 @@ class UploadPage {
                 }
                 
             } catch (error) {
-                console.error('Upload error:', error);
                 alert('Failed to publish post: ' + (error.message || 'Unknown error'));
                 publishBtn.disabled = false;
                 publishBtn.textContent = 'Publish Post';

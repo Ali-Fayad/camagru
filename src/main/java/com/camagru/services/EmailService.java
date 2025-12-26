@@ -60,18 +60,35 @@ public class EmailService {
     /**
      * Send comment notification email.
      */
-    public void sendCommentNotification(String toEmail, String imageOwner, String commenterName, String imageId) {
-        String imageLink = AppConfig.APP_URL + "/gallery/" + imageId;
-        
-        String subject = "New comment on your photo";
+    public void sendCommentNotification(String toEmail, String recipientUsername, String commenterUsername, String commentText) {
+        String subject = "New Comment on Your Post";
         String body = String.format(
             "Hi %s,\n\n" +
-            "%s commented on your photo.\n\n" +
-            "View your photo:\n" +
+            "%s commented on your photo:\n\n" +
+            "\"%s\"\n\n" +
+            "Log in to Camagru to view and respond:\n" +
             "%s\n\n" +
             "Best regards,\n" +
             "The Camagru Team",
-            imageOwner, commenterName, imageLink
+            recipientUsername, commenterUsername, commentText, AppConfig.APP_URL
+        );
+        
+        sendEmail(toEmail, subject, body);
+    }
+    
+    /**
+     * Send like notification email.
+     */
+    public void sendLikeNotification(String toEmail, String recipientUsername, String likerUsername) {
+        String subject = "New Like on Your Post";
+        String body = String.format(
+            "Hi %s,\n\n" +
+            "%s liked your photo!\n\n" +
+            "Log in to Camagru to view:\n" +
+            "%s\n\n" +
+            "Best regards,\n" +
+            "The Camagru Team",
+            recipientUsername, likerUsername, AppConfig.APP_URL
         );
         
         sendEmail(toEmail, subject, body);
@@ -92,11 +109,9 @@ public class EmailService {
             message.setText(body);
             
             Transport.send(message);
-            
-            System.out.println("Email sent to: " + to);
         } catch (MessagingException e) {
-            System.err.println("Failed to send email to " + to + ": " + e.getMessage());
-            e.printStackTrace();
+            // Silently fail - email sending errors should not break the application
+            // In production, this should be logged to a proper logging system
         }
     }
 }

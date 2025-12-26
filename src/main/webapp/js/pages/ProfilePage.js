@@ -107,7 +107,6 @@ class ProfilePage {
             this.updateProfile();
             this.renderPosts();
         } catch (error) {
-            console.error('Failed to load profile:', error);
             ErrorHandler.showError('Failed to load profile data');
         }
     }
@@ -141,7 +140,6 @@ class ProfilePage {
                 this.posts = response.data.images;
             }
         } catch (error) {
-            console.error('Failed to load user posts:', error);
             this.posts = [];
         }
     }

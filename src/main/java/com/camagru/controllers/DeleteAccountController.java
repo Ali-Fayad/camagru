@@ -53,7 +53,7 @@ public class DeleteAccountController extends HttpServlet {
                 ApiResponse.success("Account deleted successfully", null));
             
         } catch (Exception e) {
-            e.printStackTrace();
+
             sendJsonResponse(resp, 500, 
                 ApiResponse.error("Failed to delete account: " + e.getMessage(), "SERVER_ERROR"));
         }

@@ -83,9 +83,10 @@ public class AuthService {
 
     /**
      * Login user and create session.
+     * Subject requirement: Login with username and password.
      */
-    public Session login(String email, String password) throws SQLException {
-        User user = userRepository.findByEmail(email);
+    public Session login(String username, String password) throws SQLException {
+        User user = userRepository.findByUsername(username);
         
         if (user == null) {
             throw new IllegalArgumentException("Invalid credentials");

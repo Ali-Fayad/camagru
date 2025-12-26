@@ -113,7 +113,6 @@ class ImageCard {
                 this.options.onLike(imageId, !isLiked);
             }
         } catch (error) {
-            console.error('Failed to toggle like:', error);
             // Revert UI on error by reloading the count from server
             // Don't reload entire page - just log the error
             const icon = button.querySelector('.material-symbols-outlined');
@@ -140,7 +139,6 @@ class ImageCard {
                 this.options.onDelete(imageId);
             }
         } catch (error) {
-            console.error('Failed to delete image:', error);
             alert('Failed to delete post. Please try again.');
         }
     }

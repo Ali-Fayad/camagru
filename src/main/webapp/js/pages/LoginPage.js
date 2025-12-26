@@ -18,14 +18,14 @@ class LoginPage {
                 
                 <form id="login-form" class="space-y-6">
                     <div>
-                        <label class="mb-2 block text-sm font-bold text-gray-700">Email Address</label>
+                        <label class="mb-2 block text-sm font-bold text-gray-700">Username</label>
                         <div class="relative">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                <span class="material-symbols-outlined text-gray-400">mail</span>
+                                <span class="material-symbols-outlined text-gray-400">person</span>
                             </div>
-                            <input type="email" name="email" required 
+                            <input type="text" name="username" required 
                                 class="block w-full rounded-xl border-gray-300 pl-10 focus:border-cam-olive focus:ring-cam-olive"
-                                placeholder="you@example.com">
+                                placeholder="your_username">
                         </div>
                     </div>
                     
@@ -86,15 +86,15 @@ class LoginPage {
             submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span>';
             
             const formData = new FormData(form);
-            const email = formData.get('email');
+            const username = formData.get('username');
             const password = formData.get('password');
 
             try {
-                const response = await this.authService.login(email, password);
+                const response = await this.authService.login(username, password);
                 
                 // Check if verification is required (status 201)
                 if (response && response._status === 201) {
-                    localStorage.setItem('pendingVerificationEmail', email);
+                    localStorage.setItem('pendingVerificationUsername', username);
                     window.location.hash = '#/verify';
                     return;
                 }

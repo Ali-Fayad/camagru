@@ -3,7 +3,6 @@
  */
 const ErrorHandler = {
     handle: (error) => {
-        console.error(error);
-        // Show toast or alert
+        // Show toast or alert - no console output in production
     }
 };

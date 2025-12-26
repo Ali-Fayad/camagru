@@ -68,7 +68,6 @@ class GalleryPage {
             
             this.renderGrid();
         } catch (error) {
-            console.error('Failed to load gallery:', error);
             grid.innerHTML = this.renderErrorState();
         } finally {
             this.loading = false;

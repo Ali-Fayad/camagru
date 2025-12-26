@@ -40,8 +40,7 @@ public class DatabaseConfig {
             try {
                 conn.close();
             } catch (SQLException e) {
-                // Log but don't throw
-                e.printStackTrace();
+                // Silently ignore close errors
             }
         }
     }

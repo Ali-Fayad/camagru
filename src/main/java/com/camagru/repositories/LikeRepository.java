@@ -1,7 +1,6 @@
 package com.camagru.repositories;
 
 import com.camagru.config.DatabaseConfig;
-import com.camagru.models.Like;
 
 import java.sql.*;
 

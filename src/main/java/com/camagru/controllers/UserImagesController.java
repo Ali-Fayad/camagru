@@ -2,10 +2,8 @@ package com.camagru.controllers;
 
 import com.camagru.dtos.responses.ApiResponse;
 import com.camagru.models.Image;
-import com.camagru.models.User;
 import com.camagru.repositories.ImageRepository;
 import com.camagru.repositories.LikeRepository;
-import com.camagru.repositories.UserRepository;
 import com.camagru.services.SessionService;
 import com.camagru.utils.JsonUtil;
 import jakarta.servlet.ServletException;
@@ -29,7 +27,6 @@ import java.util.stream.Collectors;
 public class UserImagesController extends HttpServlet {
     
     private final ImageRepository imageRepository = new ImageRepository();
-    private final UserRepository userRepository = new UserRepository();
     private final LikeRepository likeRepository = new LikeRepository();
     private final SessionService sessionService = new SessionService();
     

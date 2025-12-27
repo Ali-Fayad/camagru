@@ -1,7 +1,6 @@
 package com.camagru.controllers;
 
 import com.camagru.dtos.responses.ApiResponse;
-import com.camagru.dtos.responses.UserResponse;
 import com.camagru.models.Session;
 import com.camagru.models.User;
 import com.camagru.services.AuthService;

@@ -5,7 +5,6 @@ import com.camagru.models.Session;
 import com.camagru.repositories.SessionRepository;
 
 import java.sql.SQLException;
-import java.sql.Timestamp;
 
 /**
  * Session service for managing user sessions.

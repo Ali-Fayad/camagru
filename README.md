@@ -1,187 +1,209 @@
-# Camagru
+# Camagru - Photo Editing Web Application
 
-A small image-editing / social web application (SPA frontend + PHP backend).  
-Frontend: vanilla JavaScript + HTML + Tailwind.  
-Backend: vanilla PHP (no framework) + MariaDB.  
-This project was built as part of the 42 Advanced Web & Mobile curriculum (optional note included in Credits).
+A pure Java web application for photo editing with sticker overlays, built without frameworks using Servlet API, JDBC, and Java2D.
 
-Repository: https://github.com/Ali-Fayad/camagru
+## 🎯 Features
 
-> I inspected key repository files (docker-compose.yml, docker/web/Dockerfile, .env, Makefile, Server/public/index.html, Server/public/index.php, Server/config/database.php, Server/routes/api.php, and several controllers). The repository search results used may be incomplete — view the full repo in GitHub for everything.
+- **User Management**: Registration with email verification (6-digit code), login, password reset
+- **Image Upload**: Upload images or capture from webcam
+- **Sticker Overlay**: Superimpose predefined stickers on images using Java2D
+- **Gallery**: Browse all edited images with infinite scroll pagination
+- **Social Features**: Like and comment on images, with email notifications
+- **Database Sessions**: PostgreSQL-backed session storage
+- **RESTful JSON API**: All endpoints return JSON responses
 
----
+## 🔧 Technology Stack
 
-## Quick facts
+- **Java 11** (SE only, no frameworks)
+- **Servlet 4.0 API** (Jakarta EE)
+- **PostgreSQL 13+** with JDBC
+- **JavaMail API** for email (SMTP)
+- **Java2D** for image processing (equivalent to PHP GD)
+- **BCrypt** for password hashing
+- **Maven** for build management
+- **Docker & Docker Compose** for deployment
 
-- Languages (approximate composition):
-  - HTML ~44% • JavaScript ~33% • PHP ~22% • Other ~1%
-- Main features:
-  - User signup/login (email verification)
-  - Create posts (image + stickers)
-  - Like and comment on posts
-  - SPA served from Server/public, PHP API routes under Server/routes
+## 📁 Project Structure
 
----
-
-## Visual concepts — architecture & flows
-
-High-level architecture
 ```
-[Browser SPA]
-    |
-    | -- (HTTP requests / fetch) --> [Apache + PHP container]
-                                      - DocumentRoot: /var/www/html/public
-                                      - index.php (Front controller) -> Router
-                                          -> Controller(s) -> Model(s) -> Database (MariaDB)
-    |
-    `-- static assets (index.html, js/*.js, css)
-```
-
-Docker view
-```
-[Host]
-  ├─ docker-compose.yml
-  │
-  ├─ camagru_web  (container)
-  │    ├─ Apache + PHP 8.1
-  │    └─ Serves /var/www/html/public (SPA) & API (index.php -> Router)
-  │
-  └─ camagru_db   (MariaDB)
-       └─ data volume: camagru_db_data
+src/main/java/com/camagru/
+├── config/              # Database, Email, App configuration
+├── controllers/         # REST API servlets
+├── services/            # Business logic layer
+├── repositories/        # DAO pattern with JDBC
+├── models/              # Entity POJOs
+├── dtos/                # Request/Response DTOs
+├── utils/               # Utilities (validation, JSON, image processing)
+└── filters/             # CORS and JSON filters
 ```
 
-Request sequence (signup -> verify -> login)
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Docker and Docker Compose
+- Java 11+ (for local development)
+- Maven 3.8+ (for local development)
+
+### Using Docker (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   cd /home/afayad/java-web-app
+   ```
+
+2. **Configure environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your SMTP credentials
+   ```
+
+3. **Build and run**
+   ```bash
+   docker-compose up --build
+   ```
+
+4. **Access the application**
+   - Application: http://localhost:8080
+   - Database: localhost:5432
+
+### Local Development
+
+1. **Set up PostgreSQL database**
+   ```bash
+   psql -U postgres
+   CREATE DATABASE camagru;
+   CREATE USER camagru WITH PASSWORD 'camagrupwd';
+   GRANT ALL PRIVILEGES ON DATABASE camagru TO camagru;
+   \q
+   
+   psql -U camagru -d camagru -f sql/schema.sql
+   ```
+
+2. **Set environment variables**
+   ```bash
+   export DB_URL=jdbc:postgresql://localhost:5432/camagru
+   export DB_USER=camagru
+   export DB_PASSWORD=camagrupwd
+   export SMTP_HOST=smtp.gmail.com
+   export SMTP_USER=your-email@gmail.com
+   export SMTP_PASSWORD=your-app-password
+   ```
+
+3. **Build and run**
+   ```bash
+   mvn clean package
+   # Deploy target/camagru.war to Tomcat or use embedded server
+   ```
+
+## 📡 API Endpoints
+
+### Authentication
+- `POST /api/register` - Register new user
+- `POST /api/verify` - Verify email with 6-digit code
+- `POST /api/login` - Login
+- `POST /api/logout` - Logout
+- `POST /api/forgot-password` - Request password reset
+- `POST /api/reset-password` - Reset password with token
+
+### User Profile
+- `GET /api/user/profile` - Get current user profile
+- `PUT /api/user/profile` - Update username/email
+- `PUT /api/user/password` - Change password
+- `PUT /api/user/notifications` - Toggle email notifications
+
+### Images
+- `POST /api/images/upload` - Upload image with sticker
+- `GET /api/images/{id}` - Get image details
+- `DELETE /api/images/{id}` - Delete own image
+
+### Gallery
+- `GET /api/gallery?cursor={timestamp}&limit=5` - Get gallery images (infinite scroll)
+- `GET /api/gallery/{id}/comments` - Get comments for image
+- `POST /api/gallery/{id}/like` - Toggle like on image
+- `POST /api/gallery/{id}/comments` - Post comment (sends notification)
+
+## 🎨 Adding Stickers
+
+Place PNG images with alpha channel in `src/main/webapp/stickers/`:
+
 ```
-1. Browser (SPA) --POST /api/user/signup--> Apache/PHP index.php
-2. index.php -> Router -> UserController::signup
-3. UserController -> User model inserts user (verification_code stored)
-4. MailerController sends/verifies code (or logs it)
-5. Browser --POST /api/mailer/verify--> Router -> MailerController::verifyEmail
-6. Browser --POST /api/user/login--> Router -> UserController::login
+stickers/
+├── 0_cat_ears.png
+├── 0_cat_ears_thumb.png
+├── 1_glasses.png
+├── 1_glasses_thumb.png
+└── ...
 ```
 
-Frontend layout (SPA structure - simplified wireframe)
-```
-+----------------------------------------------------+
-| Header: [Logo]                      [Login | Logout]|
-+----------------------------------------------------+
-|                            |                       |
-| Sidebar (right)            |       Main content     |
-| - Home                     |  - Feed / Editor /     |
-| - Gallery                  |    Gallery / Settings  |
-| - New post                 |                       |
-| - Settings                 |                       |
-+----------------------------------------------------+
-| Footer / Toast notifications                       |
-+----------------------------------------------------+
-```
+Naming convention: `{index}_{name}.png`
 
----
+## 🔒 Security Features
 
-## Basic project structure (important folders & files)
-```
-/ (repo root)
-├─ .env
-├─ docker-compose.yml
-├─ docker/
-│  └─ web/Dockerfile
-├─ Makefile
-├─ Server/
-│  ├─ public/
-│  │  ├─ index.html      ← SPA entry point
-│  │  ├─ index.php       ← API front controller
-│  │  └─ js/             ← client JS code (app.js, modules)
-│  ├─ Controller/        ← Controllers (UserController, PostController, ...)
-│  ├─ models/            ← Models (User, Post, ...)
-│  ├─ routes/
-│  │  └─ api.php         ← Router mapping URIs -> controllers
-│  └─ config/
-│     ├─ database.php    ← DB wrapper (mysqli)
-│     └─ init_db.php     ← DB init script used by Makefile
-└─ Stitch/               ← (assets for sticker composition)
+- ✅ BCrypt password hashing (PHP `password_hash()` equivalent)
+- ✅ Prepared statements for SQL injection prevention
+- ✅ HTML escaping for XSS protection
+- ✅ File upload validation (type, size)
+- ✅ Session fixation protection
+- ✅ Database-backed sessions
+- ✅ HTTP-only cookies
+
+## 📧 Email Configuration
+
+For Gmail, create an App Password:
+1. Go to Google Account settings
+2. Security → 2-Step Verification → App passwords
+3. Generate password for "Mail"
+4. Use in `SMTP_PASSWORD` environment variable
+
+## 🧪 Testing
+
+```bash
+# Test registration
+curl -X POST http://localhost:8080/api/register \
+  -H "Content-Type: application/json" \
+  -d '{"username":"testuser","email":"test@example.com","password":"Test1234"}'
+
+# Test login
+curl -X POST http://localhost:8080/api/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"Test1234"}'
+
+# Test gallery
+curl http://localhost:8080/api/gallery?limit=5
 ```
 
----
+## 📝 PHP Equivalence
 
-## API (main endpoints)
-(Calls are routed by Server/routes/api.php — the SPA uses these.)
+| Java | PHP Equivalent |
+|------|----------------|
+| BCrypt.hashpw() | password_hash() |
+| BCrypt.checkpw() | password_verify() |
+| PreparedStatement | PDO::prepare() |
+| Java2D (BufferedImage) | GD library |
+| JavaMail | mail() or PHPMailer |
+| Files.write() | file_put_contents() |
+| ResultSet | PDO fetch |
 
-- POST /api/user/signup       — create a user (JSON: email, username, password)
-- POST /api/user/login        — login (JSON: username, password)
-- POST /api/user/update       — update user (JSON including userId)
-- POST /api/user/delete       — delete user
-- POST /api/mailer            — send verification or code
-- POST /api/mailer/verify     — verify an email with a code
-- GET  /api/posts/get         — get latest posts
-- POST /api/posts/add         — add a post (image + stickers meta)
-- GET  /api/posts/stickers    — list available stickers
-- POST /api/like              — like a post
-- POST /api/comment           — create a comment
+## 🐛 Troubleshooting
 
-Examples:
-- curl -X POST http://localhost:8081/api/user/signup -H "Content-Type: application/json" -d '{"email":"you@example.com","username":"you","password":"secret"}'
-- curl http://localhost:8081/api/posts/get
+**Database connection failed**
+- Ensure PostgreSQL is running
+- Check `DB_URL`, `DB_USER`, `DB_PASSWORD` environment variables
 
-Adjust port/host to how you run the app (Docker maps host:8081 -> container:80 in the included compose).
+**Email not sending**
+- Verify SMTP credentials
+- For Gmail, use App Password, not regular password
+- Check firewall allows port 587
 
----
+**Images not processing**
+- Ensure stickers exist in `/stickers/` directory
+- Check file permissions on `/uploads/` directory
 
-## Run locally (Docker recommended)
+## 📄 License
 
-1. Copy / edit `.env` at repo root and set secure credentials:
-   - DB_USER, DB_PASSWORD, DB_NAME, MYSQL_ROOT_PASSWORD, etc.
+This project is part of the 42 curriculum.
 
-2. Start containers (from repo root):
-   - docker-compose up --build
+## 👥 Author
 
-3. Visit:
-   - http://localhost:8081
-
-4. Initialize DB (if needed):
-   - make init_db
-   - or inside container: php Server/config/init_db.php
-
-Tip: The docker/web/Dockerfile sets APACHE_DOCUMENT_ROOT to /var/www/html/public and copies Server/ into the image.
-
----
-
-## Run without Docker (quick)
-1. Ensure PHP & MariaDB are available locally.
-2. Configure .env.
-3. Create DB / run Server/config/init_db.php.
-4. Run PHP built-in server (from repo root):
-   - make run
-   - or: php -S 127.0.0.1:8000 -t Server/public
-
----
-
-## Visual checklist for contributors (how code is organized)
-- Frontend: modify files in Server/public (index.html, js/)
-- Backend routes: Server/routes/api.php (add new endpoints)
-- Controllers: Server/Controller/* (business logic)
-- Models: Server/models/* (DB access)
-- DB config: Server/config/database.php and .env
-- Docker adjustments: docker/web/Dockerfile and docker-compose.yml
-
----
-
-## Security & production reminders (visual checklist)
-- [ ] Change example passwords in .env
-- [ ] Use prepared statements or parameterized queries
-- [ ] Limit CORS origins (index.php currently uses *)
-- [ ] Configure HTTPS and mail provider for real verification emails
-- [ ] Protect uploads (type checking, size restrictions, storage permissions)
-
----
-
-## Credits & notes
-
-- Author: Ali-Fayad — repo: https://github.com/Ali-Fayad/camagru  
-- Project context: built as part of the 42 Advanced "Web & Mobile" curriculum. It is appropriate to mention that in the README's Credits/Project info section if you want to highlight the educational origin.
-
----
-
-If you want, I can:
-- add an SVG or PNG architecture image you can include in the README,
-- produce a shorter "quickstart" README for the repo root,
-- or generate a CONTRIBUTING.md that lists code style and PR process.
+Created as a pure Java implementation following the Camagru project specifications.

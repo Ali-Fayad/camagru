@@ -1,0 +1,1 @@
+class StickerPicker { render() { return DOM.create('div', {}, ['Stickers']); } }

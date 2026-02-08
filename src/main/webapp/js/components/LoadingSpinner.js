@@ -1,0 +1,1 @@
+class LoadingSpinner { render() { return DOM.create('div', {}, ['Loading...']); } }

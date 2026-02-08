@@ -1,0 +1,1 @@
+class EmptyState { render() { return DOM.create('div', {}, ['No content']); } }

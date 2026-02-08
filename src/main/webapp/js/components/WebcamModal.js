@@ -1,0 +1,1 @@
+class WebcamModal { render() { return DOM.create('div', {}, ['Webcam']); } }
